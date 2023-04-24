@@ -1,7 +1,6 @@
-﻿namespace AirLegance.Application.Dto
+﻿namespace Application.Dto;
+
+public class TestEntityDto
 {
-    public class TestEntityDto
-    {
-        public string Name { get; set; } = null!;
-    }
+    public string Name { get; set; } = null!;
 }

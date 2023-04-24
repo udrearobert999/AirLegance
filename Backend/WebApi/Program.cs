@@ -1,74 +1,63 @@
-using System.Text.Json.Serialization;
-using AirLegance.Application.Helpers;
-using AirLegance.Application.Interfaces;
-using AirLegance.Application.Services;
-using AirLegance.RESTService.ExceptionHandling;
+using Application;
+using Infrastructure;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.EventLog;
+using Presentation;
 using Serilog;
+using WebApi.Middlewares;
+using WebApi.RoutesTransformers;
 
-namespace AirLegance.RESTService
+var builder = WebApplication.CreateBuilder(args);
+
+// Add Controllers
+builder.Services
+    .AddControllers()
+    .AddApplicationPart(Presentation.AssemblyReference.Assembly);
+
+builder.Services.AddControllers(options =>
 {
-    public class Program
-    {
-        public static WebApplicationBuilder Initialize(string[]? args)
-        {
-            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-            {
-                ContentRootPath = AppContext.BaseDirectory,
-                Args = args
-            });
+    options.Conventions.Add(
+        new RouteTokenTransformerConvention(new SpinalCaseParameterTransformer()));
+});
 
-            builder.Logging.SetMinimumLevel(LogLevel.Error);
-            builder.Host.UseSerilog((_, lc) => lc.WriteTo.File(AppContext.BaseDirectory + "/Logs/log.txt",
-                Serilog.Events.LogEventLevel.Error, "[{Timestamp:HH:mm:ss}{Level:u3}]{Message}{NewLine}{Exception}",
-                rollingInterval: RollingInterval.Day, retainedFileCountLimit: null));
+// Add DI 
+builder.Services
+    .AddApplication()
+    .AddInfrastructure()
+    .AddPresentation();
 
-            builder.Configuration.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+builder.Services.AddSwaggerGen();
 
-            // Add services to the container.
+// Configure structured logging
+builder.Host.UseSerilog((context, config) => { config.ReadFrom.Configuration(context.Configuration); });
 
-            builder.Host.UseWindowsService();
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+// Add DB context
+builder.Services.AddDbContext<DbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AirleganceDB"));
+});
 
-            builder.Services.AddMvc()
-                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+var app = builder.Build();
 
-            builder.Services.Configure<EventLogSettings>(config =>
-            {
-                config.LogName = string.Empty;
-                config.SourceName = "AirLegance";
-            });
-
-            builder.Services.AddDbContext<DbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DB"));
-            }); // Change DB
-
-            builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-
-            builder.Services.AddTransient<ITestService, TestTestService>();
-
-            return builder;
-        }
-
-        public static void Main(string[] args)
-        {
-            var builder = Initialize(args);
-            var app = builder.Build();
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseSerilogRequestLogging();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.UseCors(options => options
+    .WithOrigins("http://localhost:3000")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+);
+
+app.Run();

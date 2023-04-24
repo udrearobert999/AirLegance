@@ -1,9 +1,8 @@
-﻿using AirLegance.Application.Dto;
+﻿using Application.Dto;
 
-namespace AirLegance.Application.Interfaces
+namespace Application.Interfaces;
+
+public interface ITestService
 {
-    public interface ITestService
-    {
-        public TestEntityDto GenerateTestEntity();
-    }
+    public TestEntityDto GenerateTestEntity();
 }

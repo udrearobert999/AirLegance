@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AirLegance.RESTService.ExceptionHandling;
+namespace WebApi.ErrorHandling;
 
 public class ErrorDetails
 {

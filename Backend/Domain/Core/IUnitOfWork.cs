@@ -1,11 +1,10 @@
-﻿namespace AirLegance.Domain.Core
-{
-    public interface IUnitOfWork
-    {
-        public Task<int> SaveChangesAsync();
-        public Task DisposeAsync();
+﻿namespace Domain.Core;
 
-        public int SaveChanges();
-        public void Dispose();
-    }
+public interface IUnitOfWork
+{
+    public Task<int> SaveChangesAsync();
+    public Task DisposeAsync();
+
+    public int SaveChanges();
+    public void Dispose();
 }

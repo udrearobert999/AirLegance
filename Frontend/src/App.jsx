@@ -6,7 +6,7 @@ import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 
-import * as routes from "./routes";
+import * as routes from "./Routes";
 import { Route, Routes } from "react-router-dom";
 
 import "./App.css";
