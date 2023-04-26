@@ -16,7 +16,8 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      npm i
+      npm ci
+      npm install @emotion/react
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
 
