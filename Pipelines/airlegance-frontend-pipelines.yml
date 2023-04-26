@@ -18,7 +18,7 @@ steps:
   - script: |
       npm cache clean --force
       npm ci
-      npx run build
+      npm run build
     displayName: 'Install dependencies and Build the Vite app'
     workingDirectory: $(app_dir)
 
