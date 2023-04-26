@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "npx vite",
-    "build": "vite build",
+    "build": "npx vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "npx vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
