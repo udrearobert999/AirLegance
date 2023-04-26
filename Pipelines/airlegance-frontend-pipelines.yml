@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - develop
+
+pool: Robert-PC_Agent
+
+variables:
+  node_version: '14.x'
+  app_dir: '$(Build.SourcesDirectory)\Frontend'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: $(node_version)
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm ci
+    displayName: 'Install dependencies'
+    workingDirectory: $(app_dir)
+
+  - script: |
+      npm run build
+    displayName: 'Build the Vite app'
+    workingDirectory: $(app_dir)
+
+  - task: PublishBuildArtifacts@1
+    condition: and(succeeded(), eq(variables['createArtifact'], true))
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'
+      ArtifactName: 'Airlegance_Frontend_Artifact'
+    displayName: Publish Airlegance Frontend archive
