@@ -23,7 +23,7 @@ steps:
     workingDirectory: $(app_dir)
 
   - script: |
-      node node_modules/vite/dist/bin/vite.js build
+      call npx vite build
     displayName: 'Build the Vite app'
     workingDirectory: $(app_dir)
 
