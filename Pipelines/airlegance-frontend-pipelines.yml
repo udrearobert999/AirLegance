@@ -16,16 +16,12 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      rd /s /q "node_modules"
-      del package-lock.json
-      npm cache clean --force
-      npm install
-      npm install vite
+      npm ci
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
 
   - script: |
-      npm run build
+      .\node_modules\.bin\vite.cmd build
     displayName: 'Build the Vite app'
     workingDirectory: $(app_dir)
 
