@@ -16,15 +16,10 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      echo $(app_dir)
       npm cache clean --force
       npm ci
-    displayName: 'Install dependencies'
-    workingDirectory: $(app_dir)
-
-  - script: |
-      npm run build
-    displayName: 'Build the Vite app'
+      npx vite@4.3.3 build
+    displayName: 'Install dependencies and Build the Vite app'
     workingDirectory: $(app_dir)
 
   - task: PublishBuildArtifacts@1
