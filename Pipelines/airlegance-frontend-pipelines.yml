@@ -6,7 +6,7 @@ trigger:
 pool: Robert-PC_Agent
 
 variables:
-  node_version: '14.x'
+  node_version: '16.x'
   app_dir: '$(Build.SourcesDirectory)\Frontend'
 
 steps:
