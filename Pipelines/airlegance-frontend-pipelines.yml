@@ -18,7 +18,7 @@ steps:
   - script: |
       npm cache clean --force
       npm ci
-      npm run build build
+      npm run build $(app_dir)\build
     displayName: 'Install dependencies and Build App'
     workingDirectory: $(app_dir)
 
