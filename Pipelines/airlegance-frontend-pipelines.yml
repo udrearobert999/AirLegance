@@ -16,9 +16,9 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
+      echo $(app_dir)
       npm cache clean --force
       npm ci
-
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
 
