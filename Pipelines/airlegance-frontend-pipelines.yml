@@ -24,7 +24,8 @@ steps:
     workingDirectory: $(app_dir)
 
   - script: |
-      .\node_modules\.bin\vite.cmd build
+      npm run dev
+      npm run build
     displayName: 'Build the Vite app'
     workingDirectory: $(app_dir)
 
