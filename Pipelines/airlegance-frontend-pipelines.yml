@@ -19,10 +19,16 @@ steps:
       npm cache clean --force
       npm ci
       npm run build build
+    displayName: 'Install dependencies and Build App'
+    workingDirectory: $(app_dir)
+
+  - script: |
+      chdir
+      echo '$(Build.ArtifactStagingDirectory)
       powershell -Command "Compress-Archive -Path build -DestinationPath 'Airlegance_Frontend.zip'"
       powershell -Command "Compress-Archive -Path build -DestinationPath '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'"
       echo $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
-    displayName: 'Install dependencies, Build App, Copy Artifacts, and Archive'
+    displayName: 'Create build archive'
     workingDirectory: $(app_dir)
 
   - task: PublishPipelineArtifact@1
