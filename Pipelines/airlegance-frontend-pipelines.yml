@@ -24,8 +24,8 @@ steps:
     workingDirectory: $(app_dir)
 
   - script: |
-      npm run dev
-      npm run build
+      echo "##vso[task.setvariable variable=PATH;]$env:PATH;$(app_dir)\node_modules\.bin"
+      vite build
     displayName: 'Build the Vite app'
     workingDirectory: $(app_dir)
 
