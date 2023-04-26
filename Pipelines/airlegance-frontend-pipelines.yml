@@ -17,6 +17,7 @@ steps:
 
   - script: |
       npm ci
+      npm install @emotion/react
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
 
