@@ -16,7 +16,10 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      npm ci
+      npm cache clean --force
+      rm package-lock.json
+      npm install
+
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
 
