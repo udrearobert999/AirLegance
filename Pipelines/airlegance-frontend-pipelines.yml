@@ -19,7 +19,8 @@ steps:
       npm cache clean --force
       npm ci
       npm run build "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
-      zip -r "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip" "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
+      cd "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
+      zip -r "../Airlegance_Frontend.zip" *
     displayName: 'Install dependencies and Build App + Archive'
     workingDirectory: $(app_dir)
 
