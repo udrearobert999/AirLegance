@@ -17,7 +17,6 @@ steps:
 
   - script: |
       npm cache clean --force
-      rm package-lock.json
       npm ci
 
     displayName: 'Install dependencies'
