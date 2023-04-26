@@ -18,11 +18,8 @@ steps:
   - script: |
       npm cache clean --force
       npm ci
-      npm run build
-      mkdir -p "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
-      cp -r dist/* "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
-      cd "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend"
-      zip -r "$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip" *
+      npm run build build
+      powershell -Command "Compress-Archive -Path build -DestinationPath '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'"
     displayName: 'Install dependencies, Build App, Copy Artifacts, and Archive'
     workingDirectory: $(app_dir)
 
