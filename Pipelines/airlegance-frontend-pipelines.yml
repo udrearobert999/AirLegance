@@ -23,8 +23,8 @@ steps:
     workingDirectory: $(app_dir)
 
   - script: |
-      chdir
-      echo '$(Build.ArtifactStagingDirectory)
+      cd $(app_dir)
+      dir
       powershell -Command "Compress-Archive -Path build -DestinationPath 'Airlegance_Frontend.zip'"
       powershell -Command "Compress-Archive -Path build -DestinationPath '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'"
       echo $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
