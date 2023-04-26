@@ -18,7 +18,7 @@ steps:
   - script: |
       npm cache clean --force
       rm package-lock.json
-      npm install
+      npm ci
 
     displayName: 'Install dependencies'
     workingDirectory: $(app_dir)
