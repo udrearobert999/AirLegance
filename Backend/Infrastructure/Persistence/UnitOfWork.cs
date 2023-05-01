@@ -1,42 +1,30 @@
-﻿using System.Linq.Expressions;
-using Domain.Core;
+﻿using Domain.Core;
+using Domain.Entities;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly DbContext _dbContext;
+    public IRepository<User, Guid> Users { get; }
 
-    public UnitOfWork(DbContext dbContext)
+    private readonly AirleganceDbContext _dbContext;
+
+    public UnitOfWork(AirleganceDbContext dbContext)
     {
         _dbContext = dbContext;
+        Users = new Repository<User, Guid>(_dbContext);
     }
+
 
     public async Task<int> SaveChangesAsync()
     {
         return await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DisposeAsync()
-    {
-        await _dbContext.DisposeAsync();
-    }
-
-    public void MarkEntryAsModified<TEntity>(TEntity entity,
-        Expression<Func<TEntity, object>> propertyExpression,
-        bool isModified) where TEntity : class
-    {
-        _dbContext.Entry(entity).Property(propertyExpression).IsModified = isModified;
-    }
-
     public int SaveChanges()
     {
         return _dbContext.SaveChanges();
-    }
-
-    public void Dispose()
-    {
-        _dbContext.Dispose();
     }
 }

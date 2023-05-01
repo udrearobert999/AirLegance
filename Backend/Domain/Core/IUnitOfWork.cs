@@ -1,10 +1,12 @@
-﻿namespace Domain.Core;
+﻿using Domain.Entities;
+
+namespace Domain.Core;
 
 public interface IUnitOfWork
 {
+    IRepository<User, Guid> Users { get; }
+
     public Task<int> SaveChangesAsync();
-    public Task DisposeAsync();
 
     public int SaveChanges();
-    public void Dispose();
 }

@@ -1,34 +1,14 @@
-﻿using System.Linq.Expressions;
+﻿using Domain.Entities;
+using System.Linq.Expressions;
 
 namespace Domain.Core;
 
-public interface IReadOnlyRepository<TEntity> where TEntity : class
+public interface IReadOnlyRepository<TEntity, TKey>
+    where TEntity : class, IEntity<TKey>
+    where TKey : struct
 {
-    public IEnumerable<TEntity> GetAll();
-
-    public TEntity? GetById(object id, bool track = false);
-
-    public IEnumerable<TEntity> Get(bool track = false,
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes);
-
-    public TEntity? GetFirstOrDefault(bool track = false,
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes);
-
-    public Task<IEnumerable<TEntity>> GetAllAsync();
-
-    public Task<TEntity?> GetByIdAsync(object id, bool track = false);
-
-    public Task<IEnumerable<TEntity>> GetAsync(bool track = false,
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes);
-
-    public Task<TEntity?> GetFirstOrDefaultAsync(bool track = false,
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes);
+    Task<TEntity?> GetByIdAsync(TKey id, bool track = true);
+    Task<IEnumerable<TEntity>> GetAllAsync(bool track = true);
+    Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, bool track = true);
+    Task<TEntity?> GetFirstAsync(Expression<Func<TEntity, bool>> predicate, bool track = true);
 }

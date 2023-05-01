@@ -1,7 +1,7 @@
 using Application;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.EntityFrameworkCore;
 using Presentation;
 using Serilog;
 using WebApi.Middlewares;
@@ -12,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Controllers
 builder.Services
     .AddControllers()
-    .AddApplicationPart(Presentation.AssemblyReference.Assembly);
+    .AddApplicationPart(AssemblyReference.Assembly);
 
 builder.Services.AddControllers(options =>
-{
+{   
     options.Conventions.Add(
         new RouteTokenTransformerConvention(new SpinalCaseParameterTransformer()));
 });
@@ -23,19 +23,13 @@ builder.Services.AddControllers(options =>
 // Add DI 
 builder.Services
     .AddApplication()
-    .AddInfrastructure()
+    .AddInfrastructure(builder.Configuration)
     .AddPresentation();
 
 builder.Services.AddSwaggerGen();
 
 // Configure structured logging
 builder.Host.UseSerilog((context, config) => { config.ReadFrom.Configuration(context.Configuration); });
-
-// Add DB context
-builder.Services.AddDbContext<DbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AirleganceDB"));
-});
 
 var app = builder.Build();
 
