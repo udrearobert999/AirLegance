@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Style from "./NavBar.module.css";
 import { Link } from "react-router-dom";
-import * as routes from "../../routes.js";
+import * as routes from "../../Routes.js";
 
 const navItems = ["Home", "About", "Contact"];
 
@@ -29,9 +29,14 @@ export default function NavBar() {
               </Link>
             ))}
           </Box>
-          <Link className={Style.Link} to={routes.LOGIN_ROUTE}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Link className={Style.Link} to={routes.LOGIN_ROUTE}> 
             <Button sx={{ color: "#fff" }}>Login</Button>
           </Link>
+          <Link className={Style.Link} to={routes.REGISTER_ROUTE}>
+            <Button sx={{ color: "#fff" }}>Register</Button>
+          </Link>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

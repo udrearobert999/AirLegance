@@ -1,4 +1,4 @@
-import NavBar from "./Components/NavBar";
+import { Route, Routes } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -6,8 +6,9 @@ import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 
+import NavBar from "./Components/NavBar";
+
 import * as routes from "./Routes";
-import { Route, Routes } from "react-router-dom";
 
 import "./App.css";
 

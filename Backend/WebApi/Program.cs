@@ -14,6 +14,8 @@ builder.Services
     .AddControllers()
     .AddApplicationPart(AssemblyReference.Assembly);
 
+builder.Services.AddCors();
+
 builder.Services.AddControllers(options =>
 {   
     options.Conventions.Add(
@@ -48,7 +50,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(options => options
-    .WithOrigins("http://localhost:3000")
+    .WithOrigins("http://127.0.0.1:3000")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
