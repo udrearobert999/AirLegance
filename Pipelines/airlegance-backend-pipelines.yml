@@ -1,4 +1,5 @@
-pool: Robert-PC_Agent
+pool:
+  vmImage: windows-latest
 
 variables:
   solution: $(Build.SourcesDirectory)\Backend\AirLegance.sln

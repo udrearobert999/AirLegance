@@ -3,7 +3,8 @@ trigger:
     include:
       - develop
 
-pool: Robert-PC_Agent
+pool: 
+ vmImage: windows-latest
 
 variables:
   node_version: '16.x'
@@ -18,7 +19,7 @@ steps:
   - script: |
       npm cache clean --force
       npm ci
-      npm run build $(app_dir)\build
+      npm run build
     displayName: 'Install dependencies and Build App'
     workingDirectory: $(app_dir)
 
