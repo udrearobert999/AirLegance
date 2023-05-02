@@ -12,8 +12,8 @@ public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDt
     {
         _userService = userService;
         RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("Last name is required.")
-            .MinimumLength(2).WithMessage("Last name must have at least two characters.");
+            .NotEmpty().WithMessage("First name is required.")
+            .MinimumLength(2).WithMessage("First name must have at least two characters.");
 
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("First name is required.")
@@ -23,6 +23,13 @@ public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDt
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Invalid email format.")
             .MustAsync(EmailNotInUse).WithMessage("Email already in use!");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Your password cannot be empty")
+            .MinimumLength(8).WithMessage("Your password length must be at least 8.")
+            .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
+            .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+            .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.");
     }
 
     private async Task<bool> EmailNotInUse(string email, CancellationToken cancellationToken)
