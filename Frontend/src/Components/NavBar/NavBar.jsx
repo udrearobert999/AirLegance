@@ -26,7 +26,6 @@ export default function NavBar() {
     <>
       <SignUpModal
         open={openRegisterModal}
-        handleOpen={handleRegisterModalOpen}
         handleClose={handleRegisterModalClose}
       />
       <Box sx={{ flexGrow: 1 }}>

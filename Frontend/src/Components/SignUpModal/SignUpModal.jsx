@@ -53,6 +53,8 @@ const theme = createTheme();
 
 export default function SignUpModal({ open, handleOpen, handleClose }) {
   const [errors, setErrors] = React.useState({});
+  const [successNotificationOpen, setSuccessNotificationOpen] =
+    React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,6 +71,8 @@ export default function SignUpModal({ open, handleOpen, handleClose }) {
         'http://localhost:9200/api/auth/register',
         userData
       );
+
+      handleClose();
     } catch (error) {
       console.log(error.response.data);
 
