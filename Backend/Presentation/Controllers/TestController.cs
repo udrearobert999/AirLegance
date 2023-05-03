@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ class TestController : BaseController
         _testService = testService;
     }
 
+    [Authorize]
     [HttpGet("generate-test-entity")]
     public IActionResult TestMethod()
     {

@@ -8,6 +8,7 @@ import Style from './NavBar.module.css';
 import { Link } from 'react-router-dom';
 
 import SignUpModal from 'Components/SignUpModal';
+import SignInModal from 'Components/SignInModal';
 
 const navItems = ['Home', 'About', 'Contact'];
 
@@ -18,15 +19,23 @@ const getRoute = (item) => {
 };
 
 export default function NavBar() {
-  const [openRegisterModal, setOpenRegisterModal] = useState(false);
-  const handleRegisterModalOpen = () => setOpenRegisterModal(true);
-  const handleRegisterModalClose = () => setOpenRegisterModal(false);
+  const [openSignUpModal, setOpenSignUpModal] = useState(false);
+  const handleSignUpModalOpen = () => setOpenSignUpModal(true);
+  const handleSignUpModalClose = () => setOpenSignUpModal(false);
+
+  const [openSignInModal, setOpenSignInModal] = useState(false);
+  const handleSignInModalOpen = () => setOpenSignInModal(true);
+  const handleSignInModalClose = () => setOpenSignInModal(false);
 
   return (
     <>
       <SignUpModal
-        open={openRegisterModal}
-        handleClose={handleRegisterModalClose}
+        open={openSignUpModal}
+        handleClose={handleSignUpModalClose}
+      />
+      <SignInModal
+        open={openSignInModal}
+        handleClose={handleSignInModalClose}
       />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position='static'>
@@ -41,8 +50,10 @@ export default function NavBar() {
               ))}
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button sx={{ color: '#fff' }}>Login</Button>
-              <Button onClick={handleRegisterModalOpen} sx={{ color: '#fff' }}>
+              <Button onClick={handleSignInModalOpen} sx={{ color: '#fff' }}>
+                Login
+              </Button>
+              <Button onClick={handleSignUpModalOpen} sx={{ color: '#fff' }}>
                 Register
               </Button>
             </Box>

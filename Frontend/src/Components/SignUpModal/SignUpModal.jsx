@@ -51,10 +51,8 @@ const style = {
 
 const theme = createTheme();
 
-export default function SignUpModal({ open, handleOpen, handleClose }) {
+export default function SignUpModal({ open, handleClose }) {
   const [errors, setErrors] = React.useState({});
-  const [successNotificationOpen, setSuccessNotificationOpen] =
-    React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -74,15 +72,12 @@ export default function SignUpModal({ open, handleOpen, handleClose }) {
 
       handleClose();
     } catch (error) {
-      console.log(error.response.data);
-
       if (error.response && error.response.data) {
-        const errorData = error.response.data.reduce((acc, cur) => {
+        const errorData = error.response.data.errors.reduce((acc, cur) => {
           acc[cur.propertyName] = cur.errorMessage;
           return acc;
         }, {});
 
-        console.log(errorData);
         setErrors(errorData);
       }
     }
