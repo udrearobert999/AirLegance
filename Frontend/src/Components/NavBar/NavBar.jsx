@@ -7,7 +7,7 @@ import Style from "./NavBar.module.css";
 import { Link } from "react-router-dom";
 import * as routes from "../../routes.js";
 
-const navItems = ["Home", "About", "Contact"];
+const navItems = ["Home", "About","Information", "Contact"];
 
 const getRoute = (item) => {
   if (item === "Home") return "/";
