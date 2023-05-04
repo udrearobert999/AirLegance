@@ -19,12 +19,12 @@ steps:
   - script: |
       npm cache clean --force
       npm ci
-      npm run build
+      npm run build frontend-build
     displayName: 'Install dependencies and Build App'
     workingDirectory: $(app_dir)
 
   - powershell: |
-      Compress-Archive -Path $(app_dir)\build -DestinationPath $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
+      Compress-Archive -Path $(app_dir)\frontend-build -DestinationPath $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
     displayName: 'Create build archive'
     workingDirectory: $(app_dir)
 
