@@ -10,59 +10,56 @@ namespace Infrastructure.Services;
 
 class UserService : IUserService
 {
-    private readonly IValidator<UserRegistrationDto> _userRegistrationValidator;
-    private readonly IValidator<UserLoginDto> _userLoginValidator;
+    private readonly IValidator<UserRegistrationRequestDto> _userRegistrationValidator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork, 
+    public UserService(IUnitOfWork unitOfWork,
         IMapper mapper,
-        IValidator<UserLoginDto> userLoginValidator,
-        IValidator<UserRegistrationDto> userRegistrationValidator)
+        IValidator<UserRegistrationRequestDto> userRegistrationValidator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _userLoginValidator = userLoginValidator;
         _userRegistrationValidator = userRegistrationValidator;
     }
 
-    public async Task<GenericResponseDto> CreateUserAsync(UserRegistrationDto userRegistrationDto)
+    public async Task<ResponseDto<UserRegistrationResponseDto?>> CreateUserAsync(
+        UserRegistrationRequestDto userRegistrationRequestDto)
     {
-        var validationResult = await _userRegistrationValidator.ValidateAsync(userRegistrationDto);
-        var response = new GenericResponseDto();
+        var validationResult = await _userRegistrationValidator.ValidateAsync(userRegistrationRequestDto);
+
+        var validationErrors = new List<ValidationFailure>();
         if (!validationResult.IsValid)
         {
-
-            response.Errors.AddRange(validationResult.Errors);
-
+            validationErrors.AddRange(validationResult.Errors);
         }
 
-        if (await GetUserByEmailAsync(userRegistrationDto.Email) is not null)
+        if (await GetUserByEmailAsync(userRegistrationRequestDto.Email) is not null)
         {
-            response.Errors.Add(new ValidationFailure(
-                "Email",
+            validationErrors.Add(new ValidationFailure(
+                nameof(userRegistrationRequestDto.Email),
                 "The email address is already in use"
             ));
-
-            return response;
         }
 
-        userRegistrationDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationDto.Password);
+        if (validationErrors.Count > 0)
+        {
+            return ResponseDto<UserRegistrationResponseDto>.Failure(validationErrors);
+        }
 
-        var user = _mapper.Map<User>(userRegistrationDto);
+        userRegistrationRequestDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationRequestDto.Password);
+
+        var user = _mapper.Map<User>(userRegistrationRequestDto);
+
         _unitOfWork.Users.Add(user);
-
         await _unitOfWork.SaveChangesAsync();
 
-        return new GenericResponseDto
-        {
-            Succeeded = true,
-            IsValid = true,
-            Data = user.Id
-        };
+        var userIdDto = _mapper.Map<UserRegistrationResponseDto>(user);
+
+        return ResponseDto<UserRegistrationResponseDto?>.Success(userIdDto);
     }
 
-    public async Task<User?> GetUserByEmailAsync(string email)
+    internal async Task<User?> GetUserByEmailAsync(string email)
     {
         var user = await _unitOfWork.Users.GetFirstAsync(u => u.Email == email, track: false);
 

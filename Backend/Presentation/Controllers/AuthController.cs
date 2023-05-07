@@ -24,10 +24,10 @@ public class AuthController : BaseController
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserRegistrationDto registrationDto)
+    public async Task<IActionResult> RegisterUserAsync(UserRegistrationRequestDto registrationRequestDto)
     {
-        var responseData = await _userService.CreateUserAsync(registrationDto);
-        if (!responseData.IsValid)
+        var responseData = await _userService.CreateUserAsync(registrationRequestDto);
+        if (!responseData.Succeeded)
         {
             return BadRequest(responseData);
         }
@@ -36,23 +36,29 @@ public class AuthController : BaseController
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserLoginDto loginDto)
+    public async Task<IActionResult> AuthenticateUserAsync(UserLoginRequestDto loginRequestDto)
     {
-        var authUser = await _authService.AuthenticateUser(loginDto);
-        if (authUser is null)
-            return BadRequest("Invalid credentials");
+        var jwtResponseDto = await _authService.AuthenticateUserAsync(loginRequestDto);
 
-        var jwt = _authService.CreateJwt(authUser);
+        if (!jwtResponseDto.Succeeded)
+        {
+            return BadRequest(jwtResponseDto);
+        }
 
-        Response.Cookies.Append("jwt", jwt, new CookieOptions
+        if (jwtResponseDto.Data is null)
+        {
+            return BadRequest();
+        }
+
+        Response.Cookies.Append("jwt", jwtResponseDto.Data.Jwt, new CookieOptions
         {
             HttpOnly = true
         });
 
-        return Ok(jwt);
+        return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("test")]
     public IActionResult Test()
     {

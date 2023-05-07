@@ -24,14 +24,16 @@ public static class DependencyInjection
 
         services.AddScoped<DbContext, AirleganceDbContext>();
 
+        // User registrations
         services.AddScoped<IReadOnlyRepository<User, Guid>, ReadOnlyRepository<User, Guid>>();
         services.AddScoped<IRepository<User, Guid>, Repository<User, Guid>>();
-
-        services.AddScoped<IValidator<UserRegistrationDto>, UserRegistrationDtoValidator>();
-        services.AddScoped<IValidator<UserLoginDto>, UserLoginDtoValidator>();
+        services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IValidator<UserRegistrationRequestDto>, UserRegistrationDtoValidator>();
+        services.AddScoped<IValidator<UserLoginRequestDto>, UserLoginDtoValidator>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Services registrations
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAuthService, JwtAuthService>();
 

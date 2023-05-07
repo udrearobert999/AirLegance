@@ -1,21 +1,19 @@
 ﻿using Domain.Core;
-using Domain.Entities;
 using Infrastructure.Persistence.Repositories;
 
 namespace Infrastructure.Persistence;
 
 public class UnitOfWork : IUnitOfWork
 {
-    public IRepository<User, Guid> Users { get; }
+    public IUsersRepository Users { get; }
 
     private readonly AirleganceDbContext _dbContext;
 
     public UnitOfWork(AirleganceDbContext dbContext)
     {
         _dbContext = dbContext;
-        Users = new Repository<User, Guid>(_dbContext);
+        Users = new UsersRepository(_dbContext);
     }
-
 
     public async Task<int> SaveChangesAsync()
     {

@@ -1,10 +1,8 @@
-﻿using Domain.Entities;
-
-namespace Domain.Core;
+﻿namespace Domain.Core;
 
 public interface IUnitOfWork
 {
-    IRepository<User, Guid> Users { get; }
+    IUsersRepository Users { get; }
 
     public Task<int> SaveChangesAsync();
 

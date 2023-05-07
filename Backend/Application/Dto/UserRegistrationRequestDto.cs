@@ -1,6 +1,6 @@
 ﻿namespace Application.Dto;
 
-public class UserRegistrationDto
+public class UserRegistrationRequestDto
 {
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;

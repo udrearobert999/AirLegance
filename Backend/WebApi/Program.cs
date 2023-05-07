@@ -19,7 +19,7 @@ builder.Services
 builder.Services.AddCors();
 
 builder.Services.AddControllers(options =>
-{   
+{
     options.Conventions.Add(
         new RouteTokenTransformerConvention(new SpinalCaseParameterTransformer()));
 });
@@ -33,12 +33,13 @@ builder.Services.AddAuthentication(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ??
+                                                                               throw new InvalidOperationException(
+                                                                                   "Invalid jwt key")))
         };
 
         options.Events = new JwtBearerEvents

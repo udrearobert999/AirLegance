@@ -4,5 +4,6 @@ namespace Application.Interfaces;
 
 public interface IUserService
 {
-    public Task<GenericResponseDto> CreateUserAsync(UserRegistrationDto userRegistrationDto);
+    public Task<ResponseDto<UserRegistrationResponseDto?>> CreateUserAsync(
+        UserRegistrationRequestDto userRegistrationRequestDto);
 }
