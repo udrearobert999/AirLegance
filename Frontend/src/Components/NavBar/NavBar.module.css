@@ -1,3 +1,29 @@
 .link {
   text-decoration: none;
 }
+
+.grow {
+  flex-grow: 1;
+}
+
+.appBarPosition {
+  position: static;
+}
+
+.toolbar {
+  justify-content: space-between;
+  min-height: 4rem;
+}
+
+.flexDisplay {
+  display: flex;
+  align-items: center;
+}
+
+.buttonColor {
+  color: #fff;
+}
+
+.drawerButtonColor {
+  color: #000;
+}
