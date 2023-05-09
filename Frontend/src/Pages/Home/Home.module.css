@@ -1,0 +1,10 @@
+.select{
+    justify-content: center;
+
+}
+.bg{
+    background-image: url(/src/Images/planee.png);
+    width: 800px;
+    height: 800px;
+    background-size: cover;
+}
