@@ -57,6 +57,13 @@ public class JwtAuthService : IAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public async Task<User?> GetUserWithRolesByEmailAsync(string email)
+    {
+        var user = await _unitOfWork.Users.GetUserWithRolesByEmailAsync(email);
+
+        return user;
+    }
+
     public async Task<ResponseDto<JwtAuthResponse?>> AuthenticateUserAsync(UserLoginRequestDto userRequestDto)
     {
         var validationResult = await _loginValidator.ValidateAsync(userRequestDto);
@@ -66,7 +73,7 @@ public class JwtAuthService : IAuthService
             return ResponseDto<JwtAuthResponse?>.Failure(validationResult.Errors);
         }
 
-        var user = await _unitOfWork.Users.GetUserWithRolesByEmailAsync(userRequestDto.Email);
+        var user = await GetUserWithRolesByEmailAsync(userRequestDto.Email);
 
         if (user is null)
         {

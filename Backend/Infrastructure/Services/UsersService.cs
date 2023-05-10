@@ -8,13 +8,13 @@ using FluentValidation.Results;
 
 namespace Infrastructure.Services;
 
-class UserService : IUserService
+public class UsersService : IUsersService
 {
     private readonly IValidator<UserRegistrationRequestDto> _userRegistrationValidator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork,
+    public UsersService(IUnitOfWork unitOfWork,
         IMapper mapper,
         IValidator<UserRegistrationRequestDto> userRegistrationValidator)
     {

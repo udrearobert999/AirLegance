@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces;
 
-public interface IUserService
+public interface IUsersService
 {
     public Task<ResponseDto<UserRegistrationResponseDto?>> CreateUserAsync(
         UserRegistrationRequestDto userRegistrationRequestDto);

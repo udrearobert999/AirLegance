@@ -34,7 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services registrations
-        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUsersService, UsersService>();
         services.AddTransient<IAuthService, JwtAuthService>();
 
         return services;
