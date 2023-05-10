@@ -26,26 +26,9 @@ namespace UnitTests.Tests
             _usersService = new UsersService(unitOfWork, mapper, userRegistrationValidator);
         }
 
-        [Fact]
-        public async Task CreateUserAsync_MissingEmail()
-        {
-            var userRegistrationRequestDto = new UserRegistrationRequestDto
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "", // Missing email
-                Password = "P@ssw0rd"
-            };
-
-            var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
-
-            Assert.False(response.Succeeded);
-            Assert.True(response != null &&
-                        response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.Email)));
-            Assert.Null(response.Data);
-        }
-
         [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
         [InlineData("invalid_email")]
         [InlineData("invalid_email@")]
         public async Task CreateUserAsync_InvalidEmail(string email)
@@ -66,15 +49,21 @@ namespace UnitTests.Tests
             Assert.Null(response.Data);
         }
 
-        [Fact]
-        public async Task CreateUserAsync_MissingPassword()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("short")]
+        [InlineData("1234567891234567891234")]
+        [InlineData("NOLOWER1@")]
+        [InlineData("noupper1@")]
+        public async Task CreateUserAsync_InvalidPassword(string password)
         {
             var userRegistrationRequestDto = new UserRegistrationRequestDto
             {
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "johndoe@example.com",
-                Password = "" // Missing password
+                Password = password
             };
 
             var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
@@ -82,6 +71,28 @@ namespace UnitTests.Tests
             Assert.False(response.Succeeded);
             Assert.True(response != null &&
                         response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.Password)));
+            Assert.Null(response.Data);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("J")]
+        public async Task CreateUserAsync_InvalidFirstName(string firstName)
+        {
+            var userRegistrationRequestDto = new UserRegistrationRequestDto
+            {
+                FirstName = firstName,
+                LastName = "Doe",
+                Email = "john.doe@example.com",
+                Password = "P@ssw0rd"
+            };
+
+            var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
+
+            Assert.False(response.Succeeded);
+            Assert.True(response != null &&
+                        response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.FirstName)));
             Assert.Null(response.Data);
         }
     }
