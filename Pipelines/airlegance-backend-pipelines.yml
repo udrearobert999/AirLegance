@@ -29,13 +29,14 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
     
-- task: MSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests'
   inputs:
-    solution: '$(solution)'
-    msbuildArguments: '/p:DeployOnBuild=$(createArtifact) /p:WebPublishMethod=Package /p:PackageAsSingleFile=$(createArtifact) /p:SkipInvalidConfigurations=$(createArtifact) /p:DesktopBuildPackageLocation="$(Build.ArtifactStagingDirectory)/Airlegance_Backend.zip" /p:DeployIisAppPath="Airlegance backend"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-  displayName: 'Build Airlegance Backend API'
+    command: 'test'
+    projects: '**/UniTests.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --logger "console;verbosity=detailed"'
+    testRunTitle: 'Unit tests'
+  condition: and(succeeded(), true)
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables['createArtifact'], true))
