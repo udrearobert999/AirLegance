@@ -7,23 +7,26 @@ using Domain.Core;
 using FluentValidation;
 using UnitTests.Mocks;
 using Application.AutoMapper;
+using Domain.Entities;
 
 namespace UnitTests.Tests
 {
     public class UserServiceTests
     {
         private readonly IUsersService _usersService;
+        private readonly IUsersRepository _usersRepository;
+        private readonly IMapper _mapper;
 
         public UserServiceTests()
         {
-            IUsersRepository usersRepository = new MockUsersRepository();
-            IUnitOfWork unitOfWork = new MockUnitOfWork(usersRepository);
+            _usersRepository = new MockUsersRepository();
+            IUnitOfWork unitOfWork = new MockUnitOfWork(_usersRepository);
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfiles>());
-            var mapper = config.CreateMapper();
+            _mapper = config.CreateMapper();
 
             IValidator<UserRegistrationRequestDto> userRegistrationValidator = new UserRegistrationDtoValidator();
-            _usersService = new UsersService(unitOfWork, mapper, userRegistrationValidator);
+            _usersService = new UsersService(unitOfWork, _mapper, userRegistrationValidator);
         }
 
         [Theory]
