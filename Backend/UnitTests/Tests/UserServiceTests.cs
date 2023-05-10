@@ -98,5 +98,14 @@ namespace UnitTests.Tests
                         response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.FirstName)));
             Assert.Null(response.Data);
         }
+
+        [Fact]
+        public async Task GetUserByEmailAsync_NoUser()
+        {
+            var email = "mariaioana@example.com";
+            var response = await _usersService.GetUserByEmailAsync(email);
+
+            Assert.Null(response);
+        }
     }
 }
