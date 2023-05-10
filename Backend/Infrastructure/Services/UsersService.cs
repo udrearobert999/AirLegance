@@ -59,7 +59,7 @@ public class UsersService : IUsersService
         return ResponseDto<UserRegistrationResponseDto?>.Success(userIdDto);
     }
 
-    internal async Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
         var user = await _unitOfWork.Users.GetFirstAsync(u => u.Email == email, track: false);
 
