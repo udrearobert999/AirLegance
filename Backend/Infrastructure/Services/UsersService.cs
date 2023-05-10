@@ -8,13 +8,13 @@ using FluentValidation.Results;
 
 namespace Infrastructure.Services;
 
-class UserService : IUserService
+public class UsersService : IUsersService
 {
     private readonly IValidator<UserRegistrationRequestDto> _userRegistrationValidator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork,
+    public UsersService(IUnitOfWork unitOfWork,
         IMapper mapper,
         IValidator<UserRegistrationRequestDto> userRegistrationValidator)
     {
@@ -59,7 +59,7 @@ class UserService : IUserService
         return ResponseDto<UserRegistrationResponseDto?>.Success(userIdDto);
     }
 
-    internal async Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
         var user = await _unitOfWork.Users.GetFirstAsync(u => u.Email == email, track: false);
 

@@ -38,6 +38,16 @@ steps:
     testRunTitle: 'Unit tests'
   condition: and(succeeded(), true)
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\UnitTests.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+  condition: and(succeeded(), true)
+
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables['createArtifact'], true))
   displayName: Publish Airlegance Backend API archive
