@@ -37,14 +37,13 @@ steps:
     configuration: '$(buildConfiguration)'
   displayName: 'Build Airlegance Backend API'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests'
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\UnitTests.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    command: 'test'
+    projects: '**/UniTests.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    testRunTitle: 'Unit tests'
   condition: and(succeeded(), true)
 
 - task: PublishBuildArtifacts@1
