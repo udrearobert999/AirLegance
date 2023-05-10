@@ -59,7 +59,7 @@ public class AuthController : BaseController
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("test")]
+    [HttpGet("test")]
     public IActionResult Test()
     {
         return Ok();

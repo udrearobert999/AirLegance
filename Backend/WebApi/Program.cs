@@ -25,10 +25,10 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -75,16 +75,18 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseSerilogRequestLogging();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
 app.UseCors(options => options
     .WithOrigins("http://127.0.0.1:3000")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
 );
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
