@@ -97,7 +97,6 @@ namespace UnitTests.Tests
             Assert.True(response != null &&
                         response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.FirstName)));
             Assert.Null(response.Data);
-            Assert.NotNull(null);
         }
     }
 }
