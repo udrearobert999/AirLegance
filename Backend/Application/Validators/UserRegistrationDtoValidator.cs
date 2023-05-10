@@ -1,16 +1,12 @@
 ﻿using Application.Dto;
-using Application.Interfaces;
 using FluentValidation;
 
 namespace Application.Validators;
 
-public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDto>
+public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationRequestDto>
 {
-    private readonly IUserService _userService;
-
-    public UserRegistrationDtoValidator(IUserService userService)
+    public UserRegistrationDtoValidator()
     {
-        _userService = userService;
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")
             .MinimumLength(2).WithMessage("First name must have at least two characters.");
@@ -21,8 +17,7 @@ public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDt
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("Invalid email format.")
-            .MustAsync(EmailNotInUse).WithMessage("Email already in use!");
+            .EmailAddress().WithMessage("Invalid email format.");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Your password cannot be empty")
@@ -30,11 +25,5 @@ public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDt
             .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
             .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
             .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.");
-    }
-
-    private async Task<bool> EmailNotInUse(string email, CancellationToken cancellationToken)
-    {
-        bool emailExists = await _userService.EmailExists(email);
-        return !emailExists;
     }
 }

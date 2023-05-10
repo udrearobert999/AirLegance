@@ -1,6 +1,9 @@
-﻿using Application.Interfaces;
+﻿using Application.Dto;
+using Application.Interfaces;
+using Application.Validators;
 using Domain.Core;
 using Domain.Entities;
+using FluentValidation;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
@@ -21,13 +24,18 @@ public static class DependencyInjection
 
         services.AddScoped<DbContext, AirleganceDbContext>();
 
+        // User registrations
         services.AddScoped<IReadOnlyRepository<User, Guid>, ReadOnlyRepository<User, Guid>>();
         services.AddScoped<IRepository<User, Guid>, Repository<User, Guid>>();
-
+        services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IValidator<UserRegistrationRequestDto>, UserRegistrationDtoValidator>();
+        services.AddScoped<IValidator<UserLoginRequestDto>, UserLoginDtoValidator>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Services registrations
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IAuthService, JwtAuthService>();
 
         return services;
     }

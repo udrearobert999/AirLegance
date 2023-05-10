@@ -9,12 +9,12 @@ public class ReadOnlyRepository<TEntity, TKey> : IReadOnlyRepository<TEntity, TK
     where TEntity : class, IEntity<TKey>
     where TKey : struct
 {
-    protected readonly DbContext _dbContext;
+    protected readonly AirleganceDbContext _dbContext;
     protected readonly DbSet<TEntity> _dbSet;
 
     public ReadOnlyRepository(DbContext dbContext)
     {
-        _dbContext = dbContext;
+        _dbContext = (AirleganceDbContext)dbContext;
         _dbSet = dbContext.Set<TEntity>();
     }
 

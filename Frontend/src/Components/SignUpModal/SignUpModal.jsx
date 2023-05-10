@@ -1,27 +1,31 @@
 import * as React from 'react';
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
+import {
+  Avatar,
+  Button,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Backdrop,
+  Modal,
+  Fade,
+} from '@mui/material';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+import Style from './SignUpModal.module.css';
+
 import axios from 'axios';
 
 function Copyright(props) {
   return (
     <Typography
+      className={Style.copyrightTypography}
       variant='body2'
       color='text.secondary'
       align='center'
@@ -29,7 +33,7 @@ function Copyright(props) {
     >
       {'Copyright © '}
       <Link color='inherit' href='https://mui.com/'>
-        Airlegance
+        Your Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -37,24 +41,8 @@ function Copyright(props) {
   );
 }
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  borderRadius: 10,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-};
-
-const theme = createTheme();
-
-export default function SignUpModal({ open, handleOpen, handleClose }) {
+export default function SignUpModal({ open, handleClose }) {
   const [errors, setErrors] = React.useState({});
-  const [successNotificationOpen, setSuccessNotificationOpen] =
-    React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -74,15 +62,12 @@ export default function SignUpModal({ open, handleOpen, handleClose }) {
 
       handleClose();
     } catch (error) {
-      console.log(error.response.data);
-
       if (error.response && error.response.data) {
-        const errorData = error.response.data.reduce((acc, cur) => {
+        const errorData = error.response.data.errors.reduce((acc, cur) => {
           acc[cur.propertyName] = cur.errorMessage;
           return acc;
         }, {});
 
-        console.log(errorData);
         setErrors(errorData);
       }
     }
@@ -103,110 +88,100 @@ export default function SignUpModal({ open, handleOpen, handleClose }) {
       }}
     >
       <Fade in={open}>
-        <Box sx={style}>
-          <ThemeProvider theme={theme}>
-            <Container component='main' maxWidth='xs'>
-              <CssBaseline />
+        <Box className={Style.modalBox}>
+          <Container component='main' maxWidth='xs'>
+            <Box className={Style.formContainer}>
+              <Avatar className={Style.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component='h1' variant='h5'>
+                Sign up
+              </Typography>
               <Box
-                sx={{
-                  marginTop: 8,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
+                component='form'
+                className={Style.formMarginTop}
+                noValidate
+                onSubmit={handleSubmit}
               >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                  <LockOutlinedIcon />
-                </Avatar>
-                <Typography component='h1' variant='h5'>
-                  Sign up
-                </Typography>
-                <Box
-                  component='form'
-                  noValidate
-                  onSubmit={handleSubmit}
-                  sx={{ mt: 3 }}
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete='given-name'
+                      name='firstName'
+                      required
+                      fullWidth
+                      id='firstName'
+                      label='First Name'
+                      autoFocus
+                      error={!!errors.FirstName}
+                      helperText={errors.FirstName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='lastName'
+                      label='Last Name'
+                      name='lastName'
+                      autoComplete='family-name'
+                      error={!!errors.LastName}
+                      helperText={errors.LastName}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='email'
+                      label='Email Address'
+                      name='email'
+                      autoComplete='email'
+                      error={!!errors.Email}
+                      helperText={errors.Email}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      name='password'
+                      label='Password'
+                      type='password'
+                      id='password'
+                      autoComplete='new-password'
+                      error={!!errors.Password}
+                      helperText={errors.Password}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox value='allowExtraEmails' color='primary' />
+                      }
+                      label='I want to receive inspiration, marketing promotions and updates via email.'
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  className={Style.submitButton}
                 >
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        autoComplete='given-name'
-                        name='firstName'
-                        required
-                        fullWidth
-                        id='firstName'
-                        label='First Name'
-                        autoFocus
-                        error={!!errors.FirstName}
-                        helperText={errors.FirstName}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        required
-                        fullWidth
-                        id='lastName'
-                        label='Last Name'
-                        name='lastName'
-                        autoComplete='family-name'
-                        error={!!errors.LastName}
-                        helperText={errors.LastName}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        required
-                        fullWidth
-                        id='email'
-                        label='Email Address'
-                        name='email'
-                        autoComplete='email'
-                        error={!!errors.Email}
-                        helperText={errors.Email}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        required
-                        fullWidth
-                        name='password'
-                        label='Password'
-                        type='password'
-                        id='password'
-                        autoComplete='new-password'
-                        error={!!errors.Password}
-                        helperText={errors.Password}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox value='allowExtraEmails' color='primary' />
-                        }
-                        label='I want to receive inspiration, marketing promotions and updates via email.'
-                      />
-                    </Grid>
+                  Sign Up
+                </Button>
+                <Grid container justifyContent='flex-end'>
+                  <Grid item>
+                    <Link href='#' variant='body2'>
+                      Already have an account? Sign in
+                    </Link>
                   </Grid>
-                  <Button
-                    type='submit'
-                    fullWidth
-                    variant='contained'
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Sign Up
-                  </Button>
-                  <Grid container justifyContent='flex-end'>
-                    <Grid item>
-                      <Link href='#' variant='body2'>
-                        Already have an account? Sign in
-                      </Link>
-                    </Grid>
-                  </Grid>
-                </Box>
+                </Grid>
               </Box>
-              <Copyright sx={{ mt: 5 }} />
-            </Container>
-          </ThemeProvider>
+            </Box>
+            <Copyright className={Style.copyrightMargin} />
+          </Container>
         </Box>
       </Fade>
     </Modal>

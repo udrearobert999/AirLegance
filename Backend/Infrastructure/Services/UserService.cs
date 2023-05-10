@@ -3,36 +3,66 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Core;
 using Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Infrastructure.Services;
 
 class UserService : IUserService
 {
+    private readonly IValidator<UserRegistrationRequestDto> _userRegistrationValidator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+    public UserService(IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IValidator<UserRegistrationRequestDto> userRegistrationValidator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _userRegistrationValidator = userRegistrationValidator;
     }
 
-    public async Task<Guid> CreateUserAsync(UserRegistrationDto userRegistrationDto)
+    public async Task<ResponseDto<UserRegistrationResponseDto?>> CreateUserAsync(
+        UserRegistrationRequestDto userRegistrationRequestDto)
     {
-        userRegistrationDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationDto.Password);
+        var validationResult = await _userRegistrationValidator.ValidateAsync(userRegistrationRequestDto);
 
-        var user = _mapper.Map<User>(userRegistrationDto);
+        var validationErrors = new List<ValidationFailure>();
+        if (!validationResult.IsValid)
+        {
+            validationErrors.AddRange(validationResult.Errors);
+        }
+
+        if (await GetUserByEmailAsync(userRegistrationRequestDto.Email) is not null)
+        {
+            validationErrors.Add(new ValidationFailure(
+                nameof(userRegistrationRequestDto.Email),
+                "The email address is already in use"
+            ));
+        }
+
+        if (validationErrors.Count > 0)
+        {
+            return ResponseDto<UserRegistrationResponseDto>.Failure(validationErrors);
+        }
+
+        userRegistrationRequestDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationRequestDto.Password);
+
+        var user = _mapper.Map<User>(userRegistrationRequestDto);
+
         _unitOfWork.Users.Add(user);
-
         await _unitOfWork.SaveChangesAsync();
 
-        return user.Id;
+        var userIdDto = _mapper.Map<UserRegistrationResponseDto>(user);
+
+        return ResponseDto<UserRegistrationResponseDto?>.Success(userIdDto);
     }
 
-    public async Task<bool> EmailExists(string email)
+    internal async Task<User?> GetUserByEmailAsync(string email)
     {
         var user = await _unitOfWork.Users.GetFirstAsync(u => u.Email == email, track: false);
-        
-        return user is not null;
+
+        return user;
     }
 }

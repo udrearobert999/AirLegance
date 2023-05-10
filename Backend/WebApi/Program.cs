@@ -1,7 +1,9 @@
+using System.Text;
 using Application;
-using FluentValidation.AspNetCore;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.IdentityModel.Tokens;
 using Presentation;
 using Serilog;
 using WebApi.Middlewares;
@@ -17,10 +19,38 @@ builder.Services
 builder.Services.AddCors();
 
 builder.Services.AddControllers(options =>
-{   
+{
     options.Conventions.Add(
         new RouteTokenTransformerConvention(new SpinalCaseParameterTransformer()));
 });
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ??
+                                                                               throw new InvalidOperationException(
+                                                                                   "Invalid jwt key")))
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["jwt"];
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 // Add DI 
 builder.Services
@@ -45,6 +75,7 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseSerilogRequestLogging();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
