@@ -10,23 +10,23 @@ namespace Presentation.Controllers;
 
 public class AuthController : BaseController
 {
-    private readonly IUserService _userService;
+    private readonly IUsersService _usersService;
     private readonly IAuthService _authService;
 
     public AuthController(ILogger<BaseController> logger,
         IConfiguration configuration,
-        IUserService userService,
+        IUsersService usersService,
         IAuthService authService) :
         base(logger, configuration)
     {
-        _userService = userService;
+        _usersService = usersService;
         _authService = authService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUserAsync(UserRegistrationRequestDto registrationRequestDto)
     {
-        var responseData = await _userService.CreateUserAsync(registrationRequestDto);
+        var responseData = await _usersService.CreateUserAsync(registrationRequestDto);
         if (!responseData.Succeeded)
         {
             return BadRequest(responseData);
