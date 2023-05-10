@@ -29,15 +29,6 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
     
-- task: DotNetCoreCLI@2
-  displayName: 'Run unit tests'
-  inputs:
-    command: 'test'
-    projects: '**/UniTests.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --logger "console;verbosity=detailed"'
-    testRunTitle: 'Unit tests'
-  condition: and(succeeded(), true)
-
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -47,6 +38,7 @@ steps:
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
   condition: and(succeeded(), true)
+  displayName: "Run UnitTests"
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables['createArtifact'], true))
