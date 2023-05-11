@@ -12,9 +12,12 @@ export default function Contact() {
   return (
     <div className="Contact">
       <Typography gutterBottom variant="h3" allingn="center">
-        Contact Us
+        AirLegance Contact Page
+        </Typography>
         <Card style={{maxWidth: 450, margin:"0 auto", padding:"20px 5px"}}>
           <CardContent>
+            <Typography gutterBottom variant="h5">Contact Us</Typography>
+            <Typography gutterBottom color="textSecondary" variant="body2" component="p">Fill up the form and our team will get back to you within 24 hours.</Typography>
             <form>
             <Grid container spacing={1}>
               <Grid xs={12} sm={6} item>
@@ -39,7 +42,7 @@ export default function Contact() {
             </form>
           </CardContent>
         </Card>
-      </Typography>
+      
     </div>
   );
 }

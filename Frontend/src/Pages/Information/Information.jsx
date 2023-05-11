@@ -8,26 +8,22 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-  );
+
 
 
 export default function Information() {
     return (
-      <>
-      <h3>Here we have the Information page of AirLegance travel agency</h3>
+      <div className="Information">
+    <Typography gutterBottom variant="h3" allingn="center">
+    Here we have the Information page of AirLegance travel agency
 
-      <h4>
-      <Card sx={{ minWidth: 275 }}></Card>
+   </Typography>
+
+      
+      <Card sx={{ maxWidth: 450, margin:"0 auto", padding:"20px 5px"}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          {bull}BAGAGE
+          BAGAGE
           
         </Typography>
         <img src="./src\images\cards\bagage1.jpg"/>
@@ -42,17 +38,17 @@ export default function Information() {
       <CardActions>
         <Button size="small">Learn More</Button>
       </CardActions>
-      </h4>
+      </Card>
 
-      <h5>
+      {/* <h5>
       <Card sx={{ minWidth: 300}}></Card>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
           {bull}REQUIRED DOCUMENTS
-        </Typography>
-        {/* <img src="./src\images\cards\documents.jpg"/> */}
+        </Typography> */}
+        {/* <img src="./src\images\cards\documents.jpg"/> 
        
-       
+{/*        
         <Typography variant="body2" color="text.secondary">
           At this section you can find more about 
           <br />
@@ -65,9 +61,9 @@ export default function Information() {
       <CardActions>
         <Button size="small">Learn More</Button>
       </CardActions>
-      </h5>
+      </h5> */}
 
-      <h6>
+      {/* <h6>
       <Card sx={{ minWidth: 300}}></Card>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
@@ -87,7 +83,7 @@ export default function Information() {
       <CardActions>
         <Button size="small">Learn More</Button>
       </CardActions>
-      </h6>
-    </>
+      </h6> */} 
+    </div>
     );
   }
