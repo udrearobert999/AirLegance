@@ -6,6 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import CardMedia from '@mui/material/CardMedia';
 
 
 
@@ -14,24 +15,33 @@ import Typography from '@mui/material/Typography';
 export default function Information() {
     return (
       <div className="Information">
-    <Typography gutterBottom variant="h3" allingn="center">
+    <Typography gutterBottom variant="h3" allingn="center" sx={{ textAlign: "center", padding:"20px 5px" }}>
     Here we have the Information page of AirLegance travel agency
-
    </Typography>
+   <Typography variant="h6" gutterBottom sx={{ textAlign: "left", padding:"20px 5px" }}>
+        Whether you are all set to book your ticket or are looking for practical information after your booking, we've got you covered!
+      </Typography>
 
-      
-      <Card sx={{ maxWidth: 450, margin:"0 auto", padding:"20px 5px"}}>
+   <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
+      <Card sx={{ maxWidth: 400, margin:"0", padding:"20px 5px", display: "block", textAlign: "left" }}>
       <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
+        <Typography sx={{ fontSize: 20,textAlign: "center" }} color="black" gutterBottom allingn="center">
           BAGAGE
           
         </Typography>
-        <img src="./src\images\cards\bagage1.jpg"/>
-     
-        <Typography variant="body2" color="text.secondary">
-          Here you can find some usefull 
+        
+        <CardMedia
+        component="img"
+        height="234"
+        width="100%"
+        image="./src\images\cards\excedent-bagage.jpg" 
+        alt="excedent-bagage"
+      />
+        <Typography variant="body2" color="text.secondary"  sx={{padding:"20px 5px"}}>
+          
+          All about your luggage, such as what you can and cannot bring and what to do if something goes wrong.
           <br />
-          information about the bagage
+          <br />
         </Typography>
      
       </CardContent>
@@ -40,50 +50,59 @@ export default function Information() {
       </CardActions>
       </Card>
 
-      {/* <h5>
-      <Card sx={{ minWidth: 300}}></Card>
+      <Card sx={{ maxWidth: 400, margin:"0", padding:"20px 5px", display: "block", textAlign: "left" }}>
       <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          {bull}REQUIRED DOCUMENTS
-        </Typography> */}
-        {/* <img src="./src\images\cards\documents.jpg"/> 
-       
-{/*        
-        <Typography variant="body2" color="text.secondary">
+        <Typography sx={{ fontSize: 20,textAlign: "center" }} color="black" gutterBottom>
+          REQUIRED DOCUMENTS 
+          
+        </Typography>
+        <CardMedia
+        component="img"
+        height="234"
+        width="100%"
+        image="./src\images\cards\documents.jpg" 
+        alt="documents"
+      />
+     
+     <Typography variant="body2" color="text.secondary" sx={{padding:"20px 5px"}} >
           At this section you can find more about 
-          <br />
           all the documents you need to proceed
-          <br />
-          a reservation then to do the check-in
+          a reservation then to do the check-in.
         </Typography>
      
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
       </CardActions>
-      </h5> */}
+      </Card>
 
-      {/* <h6>
-      <Card sx={{ minWidth: 300}}></Card>
+      <Card sx={{ maxWidth: 400, margin:"0", padding:"20px 5px", display: "block", textAlign: "left" }}>
       <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          {bull}ASSISTANCE AND HEALTH
+        <Typography sx={{ fontSize: 20,textAlign: "center"}} color="black" gutterBottom>
+          MANAGING YOUR BOOKING
+          
         </Typography>
-       
-       
-        <Typography variant="body2" color="text.secondary">
-         Here we are providing for our users 
-         <br/>
-         information regarding health insurances 
-         <br/>
-         for travelling...
+        <CardMedia
+        component="img"
+        height="234"
+        width="100%"
+        image="./src\images\cards\manage-booking.jpg" 
+        alt="documents"
+      />
+     
+        <Typography variant="body2" color="text.secondary"sx={{padding:"20px 5px"}}>
+        Check how to change, upgrade, or cancel your flight, and how to make a name correction.
+        <br />
+        <br />
         </Typography>
      
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
       </CardActions>
-      </h6> */} 
+      </Card>
+      </div>
+    
     </div>
     );
   }
