@@ -64,13 +64,16 @@ public class JwtAuthService : IAuthService
         return user;
     }
 
-    public async Task<ResponseDto<JwtAuthResponse?>> AuthenticateUserAsync(UserLoginRequestDto userRequestDto)
+    public async Task<JwtAuthResponse> AuthenticateUserAsync(UserLoginRequestDto userRequestDto)
     {
         var validationResult = await _loginValidator.ValidateAsync(userRequestDto);
 
         if (!validationResult.IsValid)
         {
-            return ResponseDto<JwtAuthResponse?>.Failure(validationResult.Errors);
+            return new JwtAuthResponse
+            {
+                Response = ResponseDto<UserAuthResponseDto?>.Failure(validationResult.Errors)
+            };
         }
 
         var user = await GetUserWithRolesByEmailAsync(userRequestDto.Email);
@@ -79,22 +82,31 @@ public class JwtAuthService : IAuthService
         {
             var userNotFound = new ValidationFailure(nameof(userRequestDto.Email), "User not found!");
 
-            return ResponseDto<JwtAuthResponse?>.Failure(userNotFound);
+            return new JwtAuthResponse
+            {
+                Response = ResponseDto<UserAuthResponseDto?>.Failure(userNotFound)
+            };
         }
 
         if (!BCrypt.Net.BCrypt.Verify(userRequestDto.Password, user.Password))
         {
             var incorrectPassword = new ValidationFailure(nameof(userRequestDto.Password), "Incorrect password!");
 
-            return ResponseDto<JwtAuthResponse?>.Failure(incorrectPassword);
+            return new JwtAuthResponse
+            {
+                Response = ResponseDto<UserAuthResponseDto?>.Failure(incorrectPassword)
+            };
         }
 
         var jwt = CreateJwt(user);
+        var authUserResponse = _mapper.Map<UserAuthResponseDto>(user);
+
         var jwtDto = new JwtAuthResponse
         {
-            Jwt = jwt
+            Jwt = jwt,
+            Response = ResponseDto<UserAuthResponseDto?>.Success(authUserResponse)
         };
 
-        return ResponseDto<JwtAuthResponse?>.Success(jwtDto);
+        return jwtDto;
     }
 }

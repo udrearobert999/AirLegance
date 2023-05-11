@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import {
   Avatar,
@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+import axios from 'axios';
 
 import Style from './SignInModal.module.css';
 
@@ -39,11 +41,36 @@ function Copyright(props) {
   );
 }
 
-export default function SignInModal({ open, handleClose }) {
-  const handleSubmit = (event) => {
+export default function SignInModal({ open, handleClose, setUserData }) {
+  const [errors, setErrors] = useState({});
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    console.log(data);
+    const userLoginData = {
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+
+    try {
+      const response = await axios.post(
+        'http://localhost:9200/api/auth/login',
+        userLoginData
+      );
+      console.log(response.data.data);
+      setUserData(response.data.data);
+      handleClose();
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errorData = error.response.data.errors.reduce((acc, cur) => {
+          acc[cur.propertyName] = cur.errorMessage;
+          return acc;
+        }, {});
+
+        setErrors(errorData);
+      }
+    }
   };
 
   return (
@@ -85,6 +112,8 @@ export default function SignInModal({ open, handleClose }) {
                   name='email'
                   autoComplete='email'
                   autoFocus
+                  error={!!errors.Email}
+                  helperText={errors.Email}
                 />
                 <TextField
                   margin='normal'
@@ -95,6 +124,8 @@ export default function SignInModal({ open, handleClose }) {
                   type='password'
                   id='password'
                   autoComplete='current-password'
+                  error={!!errors.Password}
+                  helperText={errors.Password}
                 />
                 <FormControlLabel
                   control={<Checkbox value='remember' color='primary' />}

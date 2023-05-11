@@ -9,6 +9,7 @@ import {
   Toolbar,
   useMediaQuery,
   useTheme,
+  Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -47,6 +48,9 @@ export default function NavBar() {
   const handleSignInModalClose = () => setOpenSignInModal(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const [userData, setUserData] = useState({});
+
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -88,6 +92,7 @@ export default function NavBar() {
       <SignInModal
         open={openSignInModal}
         handleClose={handleSignInModalClose}
+        setUserData={setUserData}
       />
       <Box className={Style.grow}>
         <AppBar className={Style.appBarPosition}>
@@ -104,18 +109,28 @@ export default function NavBar() {
             )}
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
-              <Button
-                onClick={handleSignInModalOpen}
-                className={Style.buttonColor}
-              >
-                Login
-              </Button>
-              <Button
-                onClick={handleSignUpModalOpen}
-                className={Style.buttonColor}
-              >
-                Register
-              </Button>
+              {Object.keys(userData).length > 0 &&
+              userData.firstName &&
+              userData.lastName ? (
+                <Typography variant='h6'>
+                  Welcome {userData.firstName} {userData.lastName}!
+                </Typography>
+              ) : (
+                <>
+                  <Button
+                    onClick={handleSignInModalOpen}
+                    className={Style.buttonColor}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    onClick={handleSignUpModalOpen}
+                    className={Style.buttonColor}
+                  >
+                    Register
+                  </Button>
+                </>
+              )}
             </Box>
           </Toolbar>
         </AppBar>

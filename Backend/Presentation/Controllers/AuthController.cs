@@ -40,22 +40,20 @@ public class AuthController : BaseController
     {
         var jwtResponseDto = await _authService.AuthenticateUserAsync(loginRequestDto);
 
-        if (!jwtResponseDto.Succeeded)
+        if (!jwtResponseDto.Response.Succeeded)
         {
-            return BadRequest(jwtResponseDto);
+            return BadRequest(jwtResponseDto.Response);
         }
 
-        if (jwtResponseDto.Data is null)
-        {
-            return BadRequest();
-        }
+        if (jwtResponseDto.Jwt is null)
+            return Unauthorized();
 
-        Response.Cookies.Append("jwt", jwtResponseDto.Data.Jwt, new CookieOptions
+        Response.Cookies.Append("jwt", jwtResponseDto.Jwt, new CookieOptions
         {
             HttpOnly = true
         });
 
-        return NoContent();
+        return Ok(jwtResponseDto.Response);
     }
 
     [Authorize(Roles = "Admin")]
