@@ -3,18 +3,11 @@ trigger:
     include:
       - develop
 
-<<<<<<< HEAD
 pool: 
  vmImage: windows-latest
 
 variables:
   node_version: '16.x'
-=======
-pool: Robert-PC_Agent
-
-variables:
-  node_version: '14.x'
->>>>>>> Frontend-Pipelines
   app_dir: '$(Build.SourcesDirectory)\Frontend'
 
 steps:
@@ -24,38 +17,20 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-<<<<<<< HEAD
       npm cache clean --force
       npm ci
-      npm run build
+      npm run build frontend-build
     displayName: 'Install dependencies and Build App'
     workingDirectory: $(app_dir)
 
-  - powershell: |
-      Compress-Archive -Path $(app_dir)\build -DestinationPath $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
-    displayName: 'Create build archive'
-    workingDirectory: $(app_dir)
+  # - powershell: |
+  #     Compress-Archive -Path $(app_dir)\frontend-build -DestinationPath $(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip
+  #   displayName: 'Create build archive'
+  #   workingDirectory: $(app_dir)
 
-  - task: PublishPipelineArtifact@1
-    condition: and(succeeded(), eq(variables['createArtifact'], true))
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'
-      artifactName: 'Airlegance_Frontend_Artifact'
-=======
-      npm ci
-      npm install @emotion/react
-    displayName: 'Install dependencies'
-    workingDirectory: $(app_dir)
-
-  - script: |
-      npm run build
-    displayName: 'Build the Vite app'
-    workingDirectory: $(app_dir)
-
-  - task: PublishBuildArtifacts@1
-    condition: and(succeeded(), eq(variables['createArtifact'], true))
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'
-      ArtifactName: 'Airlegance_Frontend_Artifact'
->>>>>>> Frontend-Pipelines
-    displayName: Publish Airlegance Frontend archive
+  # - task: PublishPipelineArtifact@1
+  #   condition: and(succeeded(), eq(variables['createArtifact'], true))
+  #   inputs:
+  #     targetPath: '$(Build.ArtifactStagingDirectory)/Airlegance_Frontend.zip'
+  #     artifactName: 'Airlegance_Frontend_Artifact'
+  #   displayName: Publish Airlegance Frontend archive

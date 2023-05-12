@@ -8,6 +8,9 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<TestEntity, TestEntityDto>();
+        CreateMap<UserRegistrationRequestDto, User>();
+        CreateMap<User, UserRegistrationResponseDto>();
+
+        CreateMap<User, UserAuthResponseDto>();
     }
 }

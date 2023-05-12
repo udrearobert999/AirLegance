@@ -1,15 +1,15 @@
-﻿namespace Domain.Core;
+﻿using Domain.Entities;
 
-public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
+namespace Domain.Core;
+
+public interface IRepository<TEntity, TKey> : IReadOnlyRepository<TEntity, TKey>
+    where TEntity : class, IEntity<TKey>
+    where TKey : struct
 {
-    public void Insert(TEntity entity);
-    public void Update(TEntity entityToUpdate);
-    public void Delete(object id);
-    public void Delete(TEntity entityToDelete);
-    public void Delete(IEnumerable<TEntity> entitiesToDelete);
-    public Task InsertAsync(TEntity entity);
-    public Task UpdateAsync(TEntity entityToUpdate);
-    public Task DeleteAsync(object id);
-    public Task DeleteAsync(TEntity entityToDelete);
-    public Task DeleteAsync(IEnumerable<TEntity> entityToDelete);
+    void Add(TEntity entity);
+    void AddRange(IEnumerable<TEntity> entities);
+    void Delete(TEntity entity);
+    void DeleteRange(IEnumerable<TEntity> entities);
+    void Update(TEntity entity);
+    void UpdateRange(IEnumerable<TEntity> entities);
 }

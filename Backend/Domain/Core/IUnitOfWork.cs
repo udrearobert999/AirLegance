@@ -2,9 +2,9 @@
 
 public interface IUnitOfWork
 {
+    IUsersRepository Users { get; }
+
     public Task<int> SaveChangesAsync();
-    public Task DisposeAsync();
 
     public int SaveChanges();
-    public void Dispose();
 }

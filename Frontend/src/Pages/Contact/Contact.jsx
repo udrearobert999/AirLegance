@@ -2,7 +2,7 @@ import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
 import Style from "./Contact.module.css"
-import { Card } from '@material-ui/core';
+import Card from '@mui/material/Card';
 import { CardContent } from '@mui/material';
 import { Grid } from '@mui/material';
 import { TextField } from '@mui/material';
