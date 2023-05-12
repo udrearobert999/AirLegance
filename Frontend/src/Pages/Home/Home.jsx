@@ -14,8 +14,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker as MuiDatePicker } from '@mui/lab';
 
-
+import { useState } from 'react';
+import dayjs from 'dayjs';
 
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
@@ -23,6 +25,45 @@ import { DayPicker } from 'react-day-picker';
 
 
 export default function Home() {
+  const [tripType, setTripType] = useState('');
+  const [departureLocation, setDepartureLocation] = useState('');
+  const [arrivalLocation, setArrivalLocation] = useState('');
+  const [filteredLocations, setFilteredLocations] = useState(locations);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const [departureDate, setDepartureDate] = useState(null);
+  const [arrivalDate, setArrivalDate] = useState(null);
+
+
+  //arrival date select
+  const handleTripTypeChange = (event, value) => {
+    setTripType(value?.value || '');
+  };
+  //arrival city select
+  const handleDepartureLocationChange = (event, value) => {
+    setDepartureLocation(value?.label || '');
+    setFilteredLocations(
+      locations.filter((location) => location.label !== (value?.label || ''))
+    );
+  };
+  const handleArrivalLocationChange = (event, value) => {
+    setArrivalLocation(value?.label || '');
+    setFilteredLocations(
+      locations.filter((location) => location.label !== (value?.label || ''))
+    );
+  };
+  //min departure day today
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+  //arrival date select
+  const handleDepartureDateChange = (newDate) => {
+    setDepartureDate(newDate);
+  };
+  const handleArrivalDateChange = (newDate) => {
+    setArrivalDate(newDate);
+  };
+  const minArrivalDate = departureDate ? dayjs(departureDate).add(1, 'day').toDate() : null;
   return (
 
     <>
@@ -50,8 +91,10 @@ export default function Home() {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={locations}
+        options={filteredLocations}
+        getOptionLabel={(option) => option.label}
         sx={{ width: 300}}
+        onChange={handleDepartureLocationChange}
         renderInput={(params) => <TextField {...params} label="Please select a departure location" />}
       />
       <FontAwesomeIcon icon={faPlaneArrival} />
@@ -59,8 +102,10 @@ export default function Home() {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={locations}
+        options={filteredLocations}
+        getOptionLabel={(option) => option.label}
         sx={{ width: 300}}
+        onChange={handleArrivalLocationChange}
         renderInput={(params) => <TextField {...params} label="Please select an arrival location" />}
       />
       
@@ -84,6 +129,7 @@ export default function Home() {
         id="combo-box-demo"
         options={trips}
         sx={{ width: 300}}
+        onChange={handleTripTypeChange}
         renderInput={(params) => <TextField {...params} label="Please select the type of your trip" />}
       />
       
@@ -91,16 +137,28 @@ export default function Home() {
         <h>Select your date</h>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
-        <DatePicker label="Departure date" />
+      {/* <DatePicker label="Departure date" value={departureDate} onChange={handleDepartureDateChange} /> */}
+        <DatePicker  label="Departure date" value={selectedDate}
+                      onChange={handleDateChange}
+                      minDate={dayjs()}  />
       </DemoContainer>
     </LocalizationProvider>
 
+    {!tripType || tripType !== 'oneway' ?  (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
-          <DatePicker label="Arival date" disabled/>
+        {/* <DatePicker label="Arrival date" value={arrivalDate} onChange={handleArrivalDateChange} minDate={minArrivalDate} disabled={!departureDate}  /> */}
+          <DatePicker label="Arrival date"/>
         </DemoContainer>
       </LocalizationProvider>
-
+    ) : null}
+     {tripType == 'oneway' && (
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker']}>
+          <DatePicker label="Arrival date" disabled />
+        </DemoContainer>
+      </LocalizationProvider>
+    )}
   </Box>
  
   {/* </div> */}
@@ -123,8 +181,6 @@ const locations = [
 ];
 
 const trips = [
-  { label: 'One-Way Trip',
-    value: 'oneway'   },
-  { label: 'Round Trip',
-    value: 'roundtrip'},
+  { label: 'One-Way Trip', value: 'oneway' },
+  { label: 'Round Trip', value: 'roundtrip' },
 ];
