@@ -1,6 +1,7 @@
 ﻿using Application.AutoMapper;
-using Application.Interfaces;
-using Application.Services;
+using Application.Dto;
+using Application.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -11,7 +12,7 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(typeof(AutoMapperProfiles));
 
-        services.AddTransient<ITestService, TestService>();
+        services.AddScoped<IValidator<UserRegistrationRequestDto>, UserRegistrationDtoValidator>();
 
         return services;
     }

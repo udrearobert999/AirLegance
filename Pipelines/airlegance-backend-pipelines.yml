@@ -1,0 +1,56 @@
+pool:
+  vmImage: windows-latest
+
+variables:
+  solution: $(Build.SourcesDirectory)\Backend\AirLegance.sln
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: develop
+
+steps:
+- checkout: self
+  persistCredentials: true
+
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.x'
+    includePreviewVersions: true
+    
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    
+- task: MSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArguments: '/p:DeployOnBuild=$(createArtifact) /p:WebPublishMethod=Package /p:PackageAsSingleFile=$(createArtifact) /p:SkipInvalidConfigurations=$(createArtifact) /p:DesktopBuildPackageLocation="$(Build.ArtifactStagingDirectory)/Airlegance_Backend.zip" /p:DeployIisAppPath="Airlegance backend"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+  displayName: 'Build Airlegance Backend API'
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\UnitTests.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+  condition: and(succeeded(), true)
+  displayName: "Run UnitTests"
+
+- task: PublishBuildArtifacts@1
+  condition: and(succeeded(), eq(variables['createArtifact'], true))
+  displayName: Publish Airlegance Backend API archive
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Airlegance_Backend.zip'
+    ArtifactName: 'Airlegance_Backend_Artifact'
