@@ -67,7 +67,7 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseSerilogRequestLogging();
 
 app.UseCors(options => options
-    .WithOrigins("http://127.0.0.1:3000", "http://airlegance-backend.azurewebsites.net")
+    .WithOrigins("http://localhost:3000", "http://airlegance-backend.azurewebsites.net")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()

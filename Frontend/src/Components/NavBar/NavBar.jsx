@@ -62,7 +62,7 @@ export default function NavBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const navItems = ['Home', 'About', 'Contact'];
+  const navItems = ['Home', 'About','Information' ,'Contact'];
   const getRoute = (item) => {
     // TODO: Modify this to be Open-Closed
     switch (item) {
@@ -72,6 +72,8 @@ export default function NavBar() {
         return '/about';
       case 'Contact':
         return '/contact';
+      case 'Information':
+        return '/information';
       default:
         return '/';
     }
