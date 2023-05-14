@@ -1,9 +1,8 @@
-using System.Text;
 using Application;
 using Infrastructure;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.IdentityModel.Tokens;
 using Presentation;
 using Serilog;
 using WebApi.Middlewares;
@@ -14,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Controllers
 builder.Services
     .AddControllers()
-    .AddApplicationPart(AssemblyReference.Assembly);
+    .AddApplicationPart(Presentation.AssemblyReference.Assembly);
 
 builder.Services.AddCors();
 
@@ -25,30 +24,22 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"] ??
-                                                                               throw new InvalidOperationException(
-                                                                                   "Invalid jwt key")))
-        };
+        options.TokenValidationParameters =
+            TokenValidationParamsProvider.GetTokenValidationParameters(builder.Configuration);
 
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["jwt"];
+                context.Token = context.Request.Cookies["X-Access-Token"];
                 return Task.CompletedTask;
-            }
+            },
         };
     });
 

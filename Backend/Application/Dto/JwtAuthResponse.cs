@@ -1,7 +1,8 @@
 ﻿namespace Application.Dto;
 
-public class JwtAuthResponse
+public class AuthResponse
 {
-    public string? Jwt { get; set; } = null;
+    public string? AccessToken { get; set; } = null;
+    public string? RefreshToken { get; set; } = null;
     public ResponseDto<UserAuthResponseDto?> Response { get; set; } = null!;
 }

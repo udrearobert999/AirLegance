@@ -9,4 +9,5 @@ public class User : IEntity<Guid>
     public string Password { get; set; } = null!;
 
     public ICollection<Role> Roles { get; set; } = null!;
+    public UserToken? UserToken { get; set; } = null!;
 }

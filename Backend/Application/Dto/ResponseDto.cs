@@ -30,4 +30,9 @@ public class ResponseDto<TData>
     {
         return new ResponseDto<TData?>(false, new List<ValidationFailure>() {error}, null);
     }
+
+    public static ResponseDto<TData?> Failure()
+    {
+        return new ResponseDto<TData?>(false, new List<ValidationFailure>() { }, null);
+    }
 }

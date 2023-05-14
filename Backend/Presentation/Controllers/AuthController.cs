@@ -38,25 +38,62 @@ public class AuthController : BaseController
     [HttpPost("login")]
     public async Task<IActionResult> AuthenticateUserAsync(UserLoginRequestDto loginRequestDto)
     {
-        var jwtResponseDto = await _authService.AuthenticateUserAsync(loginRequestDto);
+        var authResponse = await _authService.AuthenticateUserAsync(loginRequestDto);
 
-        if (!jwtResponseDto.Response.Succeeded)
+        if (!authResponse.Response.Succeeded)
         {
-            return BadRequest(jwtResponseDto.Response);
+            return BadRequest(authResponse.Response);
         }
 
-        if (jwtResponseDto.Jwt is null)
+        if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
             return Unauthorized();
 
-        Response.Cookies.Append("jwt", jwtResponseDto.Jwt, new CookieOptions
+        Response.Cookies.Append("X-Access-Token", authResponse.AccessToken, new CookieOptions
         {
             HttpOnly = true
         });
 
-        return Ok(jwtResponseDto.Response);
+        Response.Cookies.Append("X-Refresh-Token", authResponse.RefreshToken, new CookieOptions
+        {
+            HttpOnly = true
+        });
+
+        return Ok(authResponse.Response);
     }
 
-    [Authorize(Roles = "Admin")]
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var refreshToken = Request.Cookies["X-Refresh-Token"];
+        if (refreshToken == null)
+        {
+            return Unauthorized();
+        }
+
+        var authResponse = await _authService.RefreshTokenAsync(refreshToken);
+
+        if (!authResponse.Response.Succeeded)
+        {
+            return BadRequest(authResponse.Response);
+        }
+
+        if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
+            return Unauthorized();
+
+        Response.Cookies.Append("X-Access-Token", authResponse.AccessToken, new CookieOptions
+        {
+            HttpOnly = true
+        });
+
+        Response.Cookies.Append("X-Refresh-Token", authResponse.RefreshToken, new CookieOptions
+        {
+            HttpOnly = true
+        });
+
+        return Ok(authResponse.Response);
+    }
+
+    [Authorize]
     [HttpGet("test")]
     public IActionResult Test()
     {

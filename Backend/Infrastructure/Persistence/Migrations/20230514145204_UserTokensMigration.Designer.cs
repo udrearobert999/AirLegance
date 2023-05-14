@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AirleganceDbContext))]
-    partial class AirleganceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230514145204_UserTokensMigration")]
+    partial class UserTokensMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +79,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("UserToken")
+                    b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -85,7 +88,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserToken")
+                    b.HasIndex("Token")
                         .IsUnique();
 
                     b.HasIndex("UserId")
@@ -112,7 +115,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.UserToken", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithOne("UserToken")
+                        .WithOne("Token")
                         .HasForeignKey("Domain.Entities.UserToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -137,7 +140,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("UserToken");
+                    b.Navigation("Token");
                 });
 #pragma warning restore 612, 618
         }

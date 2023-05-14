@@ -4,5 +4,6 @@ namespace Domain.Core;
 
 public interface IUsersRepository : IRepository<User, Guid>
 {
-    public Task<User?> GetUserWithRolesByEmailAsync(string email);
+    public Task<User?> GetUserWithRolesAndTokenByEmailAsync(string email);
+    public Task<User?> GetUserWithRolesAndTokenByRefreshToken(string token);
 }

@@ -13,7 +13,7 @@ internal class MockUsersRepository : MockRepository<User, Guid>, IUsersRepositor
     {
     }
 
-    public async Task<User?> GetUserWithRolesByEmailAsync(string email)
+    public async Task<User?> GetUserWithRolesAndTokenByEmailAsync(string email)
     {
         var user = _store.Values
             .Where(u => u.Email == email)
@@ -27,5 +27,10 @@ internal class MockUsersRepository : MockRepository<User, Guid>, IUsersRepositor
             .FirstOrDefault();
 
         return await Task.FromResult(user);
+    }
+
+    public Task<User?> GetUserWithRolesAndTokenByRefreshToken(string token)
+    {
+        throw new NotImplementedException();
     }
 }
