@@ -33,4 +33,9 @@ internal class MockUsersRepository : MockRepository<User, Guid>, IUsersRepositor
     {
         throw new NotImplementedException();
     }
+
+    public Task<User?> GetUserWithTokenByRefreshToken(string token)
+    {
+        throw new NotImplementedException();
+    }
 }
