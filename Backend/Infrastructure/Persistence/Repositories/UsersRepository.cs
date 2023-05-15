@@ -29,4 +29,13 @@ public class UsersRepository : Repository<User, Guid>, IUsersRepository
 
         return user;
     }
+
+    public async Task<User?> GetUserWithTokenByRefreshToken(string token)
+    {
+        var user = await _dbContext.Users.Where(u => u.UserToken != null && u.UserToken.Token == token)
+            .Include(u => u.UserToken)
+            .FirstOrDefaultAsync();
+
+        return user;
+    }
 }
