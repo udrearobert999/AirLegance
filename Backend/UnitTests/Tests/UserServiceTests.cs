@@ -1,4 +1,5 @@
-﻿using Application.Dto;
+﻿using System.Linq.Expressions;
+using Application.Dto;
 using Application.Interfaces;
 using Application.Validators;
 using Infrastructure.Services;
@@ -8,6 +9,8 @@ using FluentValidation;
 using UnitTests.Mocks;
 using Application.AutoMapper;
 using Domain.Entities;
+using FluentValidation.Results;
+using Moq;
 
 namespace UnitTests.Tests;
 
@@ -36,6 +39,7 @@ public class UserServiceTests
     [InlineData("invalid_email@")]
     public async Task CreateUserAsync_InvalidEmail(string email)
     {
+        // Arrange
         var userRegistrationRequestDto = new UserRegistrationRequestDto
         {
             FirstName = "John",
@@ -44,8 +48,39 @@ public class UserServiceTests
             Password = "P@ssw0rd"
         };
 
-        var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
+        var user = new User
+        {
+            FirstName = userRegistrationRequestDto.FirstName,
+            LastName = userRegistrationRequestDto.LastName,
+            Email = userRegistrationRequestDto.Email,
+            Password = userRegistrationRequestDto.Password
+        };
 
+        var mockUserRepository = new Mock<IUsersRepository>();
+        mockUserRepository.Setup(repo => repo.GetFirstAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
+            .ReturnsAsync(default(User));
+
+        var mockMapper = new Mock<IMapper>();
+        mockMapper.Setup(mapper => mapper.Map<User>(It.IsAny<UserRegistrationRequestDto>())).Returns(user);
+
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(uow => uow.Users).Returns(mockUserRepository.Object);
+
+        var mockValidator = new Mock<IValidator<UserRegistrationRequestDto>>();
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("Email", "Invalid email format")
+        });
+
+        mockValidator.Setup(v => v.ValidateAsync(userRegistrationRequestDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var usersService = new UsersService(mockUnitOfWork.Object, mockMapper.Object, mockValidator.Object);
+
+        // Act
+        var response = await usersService.CreateUserAsync(userRegistrationRequestDto);
+
+        // Assert
         Assert.False(response.Succeeded);
         Assert.True(response != null &&
                     response.Errors.Any(e => e.PropertyName == nameof(userRegistrationRequestDto.Email)));
