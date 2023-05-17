@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 
-import Home from "./Pages/Home";
-import About from "./Pages/About";
-import Contact from "./Pages/Contact";
-import Information from "./Pages/Information";
-import NavBar from "./Components/NavBar";
+import Home from './Pages/Home';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
+import Information from './Pages/Information';
+import NavBar from './Components/NavBar';
 
 import * as routes from './Routes';
 
@@ -19,8 +19,11 @@ export default function App() {
           <Route exact path={routes.HOME_ROUTE} element={<Home />} />
           <Route exact path={routes.ABOUT_ROUTE} element={<About />} />
           <Route exact path={routes.CONTACT_ROUTE} element={<Contact />} />
-          <Route exaxt path={routes.INFORMATION_ROUTE} element={<Information />}/>
-
+          <Route
+            exaxt
+            path={routes.INFORMATION_ROUTE}
+            element={<Information />}
+          />
         </Routes>
       </div>
     </>
