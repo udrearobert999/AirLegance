@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import useAuth from '../../Hooks/useAuth';
+
 import {
   AppBar,
   Box,
@@ -62,7 +64,7 @@ export default function NavBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const navItems = ['Home', 'About','Information' ,'Contact'];
+  const navItems = ['Home', 'About', 'Information', 'Contact'];
   const getRoute = (item) => {
     // TODO: Modify this to be Open-Closed
     switch (item) {

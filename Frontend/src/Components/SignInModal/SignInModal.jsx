@@ -62,9 +62,11 @@ export default function SignInModal({ open, handleClose, setUserData }) {
         'http://localhost:9200/api/auth/login',
         userLoginData
       );
-      console.log(response.data.data);
-      setAuth(response.data.data);
-      setUserData(response.data.data);
+      const userData = {
+        user: response.data?.data,
+      };
+      setAuth(userData);
+      setUserData(user);
       handleClose();
     } catch (error) {
       if (error.response && error.response.data) {
