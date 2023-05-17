@@ -42,7 +42,7 @@ public class AuthController : BaseController
 
         if (!authResponse.Response.Succeeded)
         {
-            return BadRequest(authResponse.Response);
+            return Unauthorized(authResponse.Response);
         }
 
         if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
@@ -74,7 +74,7 @@ public class AuthController : BaseController
 
         if (!authResponse.Response.Succeeded)
         {
-            return BadRequest(authResponse.Response);
+            return Unauthorized(authResponse.Response);
         }
 
         if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
@@ -91,6 +91,19 @@ public class AuthController : BaseController
         });
 
         return Ok(authResponse.Response);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(string refreshToken)
+    {
+        var result = await _authService.InvalidateTokenAsync(refreshToken);
+
+        if (!result)
+        {
+            return Unauthorized();
+        }
+
+        return NoContent();
     }
 
     [Authorize]

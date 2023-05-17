@@ -1,6 +1,6 @@
 using Application;
 using Infrastructure;
-using Infrastructure.Identity;
+using Infrastructure.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Presentation;
@@ -31,7 +31,8 @@ builder.Services.AddAuthentication(options =>
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters =
-            TokenValidationParamsProvider.GetTokenValidationParameters(builder.Configuration);
+            TokenValidationParametersConfiguration.GetTokenValidationParameters(builder.Configuration["Jwt:Secret"] ??
+                throw new InvalidOperationException("Jwt secret not found!"));
 
         options.Events = new JwtBearerEvents
         {

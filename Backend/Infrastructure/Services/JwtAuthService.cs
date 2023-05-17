@@ -4,11 +4,10 @@ using System.Text;
 using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
-using Azure.Core;
 using Domain.Core;
 using Domain.Entities;
 using FluentValidation;
-using Infrastructure.Identity;
+using Infrastructure.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ValidationFailure = FluentValidation.Results.ValidationFailure;
@@ -31,7 +30,7 @@ public class JwtAuthService : IAuthService
         _loginValidator = loginValidator;
         _config = config;
 
-        _key = _config["Jwt:Secret"] ?? throw new InvalidOperationException("Invalid access token secret");
+        _key = _config["Jwt:Secret"] ?? throw new InvalidOperationException("Jwt secret not found!");
     }
 
     public struct AuthTokensDto
@@ -79,7 +78,7 @@ public class JwtAuthService : IAuthService
 
     private ClaimsPrincipal ValidateToken(string token)
     {
-        var tokenValidationParameters = TokenValidationParamsProvider.GetTokenValidationParameters(_config);
+        var tokenValidationParameters = TokenValidationParametersConfiguration.GetTokenValidationParameters(_key);
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -95,7 +94,7 @@ public class JwtAuthService : IAuthService
         }
         catch
         {
-            var invalidTokenMessage = new ValidationFailure("X-Refresh-Token", "Token is invalid!");
+            var invalidTokenMessage = new ValidationFailure("RefreshToken", "Token is invalid!");
 
             return new AuthResponse
             {
@@ -116,6 +115,22 @@ public class JwtAuthService : IAuthService
         }
 
         return await AuthenticateUserInternalAsync(user);
+    }
+
+    public async Task<bool> InvalidateTokenAsync(string refreshToken)
+    {
+        var user = await _unitOfWork.Users.GetUserWithTokenByRefreshToken(refreshToken);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.UserToken = null;
+        _unitOfWork.Users.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        return true;
     }
 
     private async Task<AuthResponse> AuthenticateUserInternalAsync(User user)
