@@ -22,6 +22,8 @@ import axios from 'axios';
 
 import Style from './SignInModal.module.css';
 
+import useAuth from '../../Hooks/useAuth';
+
 function Copyright(props) {
   return (
     <Typography
@@ -42,6 +44,8 @@ function Copyright(props) {
 }
 
 export default function SignInModal({ open, handleClose, setUserData }) {
+  const { setAuth } = useAuth();
+
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
@@ -59,6 +63,7 @@ export default function SignInModal({ open, handleClose, setUserData }) {
         userLoginData
       );
       console.log(response.data.data);
+      setAuth(response.data.data);
       setUserData(response.data.data);
       handleClose();
     } catch (error) {

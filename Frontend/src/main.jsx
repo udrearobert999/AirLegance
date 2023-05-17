@@ -8,6 +8,8 @@ import {
 
 import './index.css';
 
+import { AuthProvider } from './Contexts/AuthProvider';
+
 import App from './App';
 
 import { BrowserRouter } from 'react-router-dom';
@@ -18,7 +20,9 @@ root.render(
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={createTheme()}>
         <BrowserRouter>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </StyledEngineProvider>
