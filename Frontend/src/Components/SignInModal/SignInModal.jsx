@@ -60,13 +60,14 @@ export default function SignInModal({ open, handleClose, setUserData }) {
     try {
       const response = await axios.post(
         'http://localhost:9200/api/auth/login',
-        userLoginData
+        userLoginData,
+        { withCredentials: true }
       );
       const userData = {
         user: response.data?.data,
       };
       setAuth(userData);
-      setUserData(user);
+      setUserData(userData.user);
       handleClose();
     } catch (error) {
       if (error.response && error.response.data) {
