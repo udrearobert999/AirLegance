@@ -104,7 +104,35 @@ public class UserServiceTests
             Password = password
         };
 
-        var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
+        var user = new User
+        {
+            FirstName = userRegistrationRequestDto.FirstName,
+            LastName = userRegistrationRequestDto.LastName,
+            Email = userRegistrationRequestDto.Email,
+            Password = userRegistrationRequestDto.Password
+        };
+        var mockUserRepository = new Mock<IUsersRepository>();
+        mockUserRepository.Setup(repo => repo.GetFirstAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
+            .ReturnsAsync(default(User));
+
+        var mockMapper = new Mock<IMapper>();
+        mockMapper.Setup(mapper => mapper.Map<User>(It.IsAny<UserRegistrationRequestDto>())).Returns(user);
+
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(uow => uow.Users).Returns(mockUserRepository.Object);
+
+        var mockValidator = new Mock<IValidator<UserRegistrationRequestDto>>();
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("Password", "Invalid password format")
+        });
+
+        mockValidator.Setup(v => v.ValidateAsync(userRegistrationRequestDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var usersService = new UsersService(mockUnitOfWork.Object, mockMapper.Object, mockValidator.Object);
+
+        var response = await usersService.CreateUserAsync(userRegistrationRequestDto);
 
         Assert.False(response.Succeeded);
         Assert.True(response != null &&
@@ -126,7 +154,35 @@ public class UserServiceTests
             Password = "P@ssw0rd"
         };
 
-        var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
+        var user = new User
+        {
+            FirstName = userRegistrationRequestDto.FirstName,
+            LastName = userRegistrationRequestDto.LastName,
+            Email = userRegistrationRequestDto.Email,
+            Password = userRegistrationRequestDto.Password
+        };
+        var mockUserRepository = new Mock<IUsersRepository>();
+        mockUserRepository.Setup(repo => repo.GetFirstAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
+            .ReturnsAsync(default(User));
+
+        var mockMapper = new Mock<IMapper>();
+        mockMapper.Setup(mapper => mapper.Map<User>(It.IsAny<UserRegistrationRequestDto>())).Returns(user);
+
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(uow => uow.Users).Returns(mockUserRepository.Object);
+
+        var mockValidator = new Mock<IValidator<UserRegistrationRequestDto>>();
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("FirstName", "Invalid first name format")
+        });
+
+        mockValidator.Setup(v => v.ValidateAsync(userRegistrationRequestDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var usersService = new UsersService(mockUnitOfWork.Object, mockMapper.Object, mockValidator.Object);
+
+        var response = await usersService.CreateUserAsync(userRegistrationRequestDto);
 
         Assert.False(response.Succeeded);
         Assert.True(response != null &&
@@ -148,7 +204,35 @@ public class UserServiceTests
             Password = "P@ssw0rd"
         };
 
-        var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
+        var user = new User
+        {
+            FirstName = userRegistrationRequestDto.FirstName,
+            LastName = userRegistrationRequestDto.LastName,
+            Email = userRegistrationRequestDto.Email,
+            Password = userRegistrationRequestDto.Password
+        };
+        var mockUserRepository = new Mock<IUsersRepository>();
+        mockUserRepository.Setup(repo => repo.GetFirstAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
+            .ReturnsAsync(default(User));
+
+        var mockMapper = new Mock<IMapper>();
+        mockMapper.Setup(mapper => mapper.Map<User>(It.IsAny<UserRegistrationRequestDto>())).Returns(user);
+
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(uow => uow.Users).Returns(mockUserRepository.Object);
+
+        var mockValidator = new Mock<IValidator<UserRegistrationRequestDto>>();
+        var validationResult = new ValidationResult(new List<ValidationFailure>
+        {
+            new ValidationFailure("LastName", "Invalid last name format")
+        });
+
+        mockValidator.Setup(v => v.ValidateAsync(userRegistrationRequestDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        var usersService = new UsersService(mockUnitOfWork.Object, mockMapper.Object, mockValidator.Object);
+
+        var response = await usersService.CreateUserAsync(userRegistrationRequestDto);
 
         Assert.False(response.Succeeded);
         Assert.True(response != null &&
