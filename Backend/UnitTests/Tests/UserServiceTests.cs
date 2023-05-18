@@ -248,50 +248,6 @@ public class UserServiceTests
         Assert.Null(response.Data);
     }
 
-    //[Fact]
-    //public async Task CreateUserAsync_UserAlreadyExists()
-    //{
-    //    var userRegistrationRequestDto = new UserRegistrationRequestDto
-    //    {
-    //        FirstName = "Andrei",
-    //        LastName = "Vaduva",
-    //        Email = "vaduvaandrei@example.com",
-    //        Password = "P@ssw0rd"
-    //    };
-
-    //    var user = new User
-    //    {
-    //        FirstName = userRegistrationRequestDto.FirstName,
-    //        LastName = userRegistrationRequestDto.LastName,
-    //        Email = userRegistrationRequestDto.Email,
-    //        Password = userRegistrationRequestDto.Password
-    //    };
-    //    var mockUserRepository = new Mock<IUsersRepository>();
-    //    mockUserRepository.Setup(repo => repo.GetFirstAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<bool>()))
-    //        .ReturnsAsync(default(User));
-
-    //    var mockMapper = new Mock<IMapper>();
-    //    mockMapper.Setup(mapper => mapper.Map<User>(It.IsAny<UserRegistrationRequestDto>())).Returns(user);
-
-    //    var mockUnitOfWork = new Mock<IUnitOfWork>();
-    //    mockUnitOfWork.Setup(uow => uow.Users).Returns(mockUserRepository.Object);
-
-    //    var mockValidator = new Mock<IValidator<UserRegistrationRequestDto>>();
-    //    //var validationResult = new ValidationResult(new List<ValidationFailure>
-    //    //{
-    //    //    new ValidationFailure("LastName", "Invalid last name format")
-    //    //});
-
-    //    //mockValidator.Setup(v => v.ValidateAsync(userRegistrationRequestDto, It.IsAny<CancellationToken>()))
-    //    //    .ReturnsAsync(validationResult);
-    //    //_usersRepository.Add(user);
-
-    //    var response = await _usersService.CreateUserAsync(userRegistrationRequestDto);
-
-    //    Assert.False(response.Succeeded);
-    //    Assert.Null(response.Data);
-    //}
-
     [Fact]
     public async Task GetUserByEmailAsync_UserExists()
     {
