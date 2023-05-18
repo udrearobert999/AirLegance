@@ -2,10 +2,12 @@
 using Application.Dto;
 using Application.Validators;
 using AutoMapper;
+using Domain.Core;
 using Domain.Entities;
 using FluentValidation;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using UnitTests.Mocks;
 
 namespace UnitTests.Tests;
@@ -28,13 +30,12 @@ public class JwtAuthServiceTests
     }
 
     [Fact]
-    public async Task GetUserWithRolesByEmailAsync_UserExists()
+    public async Task GetUserWithRolesAndTokenByEmailAsync_UserExists()
     {
-        // Arange 
-        /*var email = "mariaioana@example.com";
+        // Arrange
+        var email = "mariaioana@example.com";
         var role = "Admin";
-        var usersList = new List<User>();
-        usersList.Add(new User
+        var mockUser = new User
         {
             FirstName = "Maria",
             LastName = "Ioana",
@@ -42,39 +43,64 @@ public class JwtAuthServiceTests
             Password = "P@ssw0rd",
             Roles = new List<Role>
             {
-                new()
-                {
-                    Name = role
-                }
-            }
-        });
+                new Role {Name = role}
+            },
+            UserToken = new UserToken { }
+        };
 
-        var repo = new MockUsersRepository(usersList);
-        var unitOfWork = new MockUnitOfWork(repo);
-        var jwtAuthService = new JwtAuthService(_configuration, unitOfWork, _mapper, _loginValidator);
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(u => u.Users.GetUserWithRolesAndTokenByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(mockUser);
 
+        var mockConfiguration = new Mock<IConfiguration>();
+        mockConfiguration.Setup(c => c["Jwt:Secret"]).Returns("Super secret key for jwt signature");
+
+        var mockMapper = new Mock<IMapper>();
+
+        var mockLoginValidator = new Mock<IValidator<UserLoginRequestDto>>();
+        mockLoginValidator.Setup(v =>
+                v.ValidateAsync(It.IsAny<ValidationContext<UserLoginRequestDto>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+
+        var jwtAuthService = new JwtAuthService(mockUnitOfWork.Object, mockMapper.Object, mockLoginValidator.Object,
+            mockConfiguration.Object);
+
+        // Act
         var response = await jwtAuthService.GetUserWithRolesAndTokenByEmailAsync(email);
 
+        // Assert
         Assert.NotNull(response);
         Assert.Equal(email, response.Email);
-        Assert.NotNull(response.Roles.Where(r => r.Name == role));*/
-
+        Assert.NotNull(response.Roles.FirstOrDefault(r => r.Name == role));
     }
 
     [Fact]
     public async Task GetUserWithRolesByEmailAsync_NoUser()
     {
-        /*var repo = new MockUsersRepository();
-        var unitOfWork = new MockUnitOfWork(repo);
-        var jwtAuthService = new JwtAuthService(_configuration, unitOfWork, _mapper, _loginValidator);
-
+        // Arrange
         var email = "asdasd";
-        //var role = "asdasd";
 
+        var mockUnitOfWork = new Mock<IUnitOfWork>();
+        mockUnitOfWork.Setup(u => u.Users.GetUserWithRolesAndTokenByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync((User) null);
+
+        var mockConfiguration = new Mock<IConfiguration>();
+        mockConfiguration.Setup(c => c["Jwt:Secret"]).Returns("Super secret key for jwt signature");
+
+        var mockMapper = new Mock<IMapper>(); // If necessary, setup specific mapping here.
+
+        var mockLoginValidator = new Mock<IValidator<UserLoginRequestDto>>();
+        mockLoginValidator.Setup(v =>
+                v.ValidateAsync(It.IsAny<ValidationContext<UserLoginRequestDto>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+
+        var jwtAuthService = new JwtAuthService(mockUnitOfWork.Object, mockMapper.Object, mockLoginValidator.Object,
+            mockConfiguration.Object);
+
+        // Act
         var response = await jwtAuthService.GetUserWithRolesAndTokenByEmailAsync(email);
 
-        Assert.Null(response);*/
+        // Assert
+        Assert.Null(response);
     }
-
-
 }
