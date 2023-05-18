@@ -14,11 +14,7 @@ const useAxiosPrivate = () => {
       (response) => response,
       async (error) => {
         const previousRequest = error?.config;
-        if (
-          (error?.response?.status === 403 ||
-            error?.response?.status === 401) &&
-          !previousRequest?.sent
-        ) {
+        if (error?.response?.status === 401 && !previousRequest?.sent) {
           previousRequest.sent = true;
           await refresh();
           return axiosPrivate(previousRequest);

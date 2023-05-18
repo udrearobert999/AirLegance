@@ -74,7 +74,7 @@ public class AuthController : BaseController
 
         if (!authResponse.Response.Succeeded)
         {
-            return Forbid();
+            return Unauthorized();
         }
 
         if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
