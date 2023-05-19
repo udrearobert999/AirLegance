@@ -43,7 +43,7 @@ function Copyright(props) {
   );
 }
 
-export default function SignInModal({ open, handleClose, setUserData }) {
+export default function SignInModal({ open, handleClose }) {
   const { setAuth } = useAuth();
 
   const [errors, setErrors] = useState({});
@@ -67,7 +67,6 @@ export default function SignInModal({ open, handleClose, setUserData }) {
         user: response.data?.data,
       };
       setAuth(userData);
-      setUserData(userData.user);
       handleClose();
     } catch (error) {
       if (error.response && error.response.data) {

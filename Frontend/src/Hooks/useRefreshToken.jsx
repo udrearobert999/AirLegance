@@ -3,7 +3,7 @@ import useAuth from './useAuth';
 import axios from 'axios';
 
 const useRefreshToken = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, auth } = useAuth();
 
   const refresh = async () => {
     const response = await axios.post(
@@ -14,9 +14,10 @@ const useRefreshToken = () => {
       }
     );
 
-    setAuth((prev) => ({
-      ...prev, // user: in case we would want to change the user data in the future,
-    }));
+    const userData = {
+      user: response.data?.data,
+    };
+    setAuth(userData);
   };
 
   return refresh;

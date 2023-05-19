@@ -8,6 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       Components: path.resolve(__dirname, 'src/Components'),
+      Hooks: path.resolve(__dirname, 'src/Hooks'),
+      Pages: path.resolve(__dirname, 'src/Pages'),
+      Api: path.resolve(__dirname, 'src/Api'),
+      Contexts: path.resolve(__dirname, 'src/Contexts'),
     },
   },
   server: {

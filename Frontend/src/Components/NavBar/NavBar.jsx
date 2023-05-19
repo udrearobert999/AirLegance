@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import useAuth from '../../Hooks/useAuth';
+import useAuth from 'Hooks/useAuth';
 
 import {
   AppBar,
@@ -51,11 +51,7 @@ export default function NavBar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const [userData, setUserData] = useState({});
-
-  const handleLogout = () => {
-    setUserData({});
-  };
+  const { auth } = useAuth();
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -91,23 +87,6 @@ export default function NavBar() {
     </Box>
   );
 
-  useEffect(() => {
-    // At the start, check if there is a user data in local storage
-    const savedUserData = JSON.parse(localStorage.getItem('userData'));
-    if (savedUserData) {
-      setUserData(savedUserData);
-    }
-  }, []);
-
-  useEffect(() => {
-    // When userData changes, save it to local storage
-    if (userData && Object.keys(userData).length > 0) {
-      localStorage.setItem('userData', JSON.stringify(userData));
-    } else {
-      localStorage.removeItem('userData');
-    }
-  }, [userData]);
-
   return (
     <>
       <SignUpModal
@@ -117,7 +96,6 @@ export default function NavBar() {
       <SignInModal
         open={openSignInModal}
         handleClose={handleSignInModalClose}
-        setUserData={setUserData}
       />
       <Box className={Style.grow}>
         <AppBar className={Style.appBarPosition}>
@@ -134,16 +112,11 @@ export default function NavBar() {
             )}
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
-              {Object.keys(userData).length > 0 &&
-              userData.firstName &&
-              userData.lastName ? (
+              {auth?.user && auth?.user?.firstName && auth?.user?.lastName ? (
                 <>
                   <Typography variant='h6'>
-                    Welcome {userData.firstName} {userData.lastName}!
+                    Welcome {auth.user.firstName} {auth?.user?.lastName}!
                   </Typography>
-                  <Button onClick={handleLogout} className={Style.buttonColor}>
-                    Log Out
-                  </Button>
                 </>
               ) : (
                 <>

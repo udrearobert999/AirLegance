@@ -74,7 +74,7 @@ export default function Home() {
       <Box
         display='flex'
         justifyContent='center'
-        allign-alignItems='center'
+        alignItems='center'
         sx={{
           alignItems: 'center',
           justifyContent: 'center',
@@ -114,7 +114,7 @@ export default function Home() {
       <Box
         display='flex'
         justifyContent='center'
-        allign-alignItems='center'
+        alignItems='center'
         sx={{
           alignItems: 'center',
           justifyContent: 'center',
