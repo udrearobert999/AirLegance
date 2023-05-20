@@ -1,87 +1,70 @@
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
 import useAuth from 'Hooks/useAuth';
+import useLogout from 'Hooks/useLogout';
+
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   AppBar,
   Box,
   Button,
-  Drawer,
   IconButton,
   Toolbar,
   useMediaQuery,
   useTheme,
   Typography,
+  Drawer,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
-import { Link } from 'react-router-dom';
+import RegisterModal from 'Components/RegisterModal';
+import LoginModal from 'Components/LoginModal';
+import DrawerContent from 'Components/DrawerContent';
 
 import Style from './NavBar.module.css';
-import SignUpModal from 'Components/SignUpModal';
-import SignInModal from 'Components/SignInModal';
 
-const DrawerContent = ({ navItems, getRoute, handleDrawerToggle }) => {
-  return (
-    <Box p={2} bgcolor='background.default'>
-      {navItems.map((item) => (
-        <Link
-          key={item}
-          className={Style.Link}
-          to={getRoute(item)}
-          onClick={handleDrawerToggle}
-        >
-          <Button className={Style.drawerButtonColor} fullWidth>
-            {item}
-          </Button>
-        </Link>
-      ))}
-    </Box>
-  );
-};
+import {
+  HOME_ROUTE,
+  ABOUT_ROUTE,
+  INFORMATION_ROUTE,
+  CONTACT_ROUTE,
+} from 'Routes';
 
-export default function NavBar() {
-  const [openSignUpModal, setOpenSignUpModal] = useState(false);
-  const handleSignUpModalOpen = () => setOpenSignUpModal(true);
-  const handleSignUpModalClose = () => setOpenSignUpModal(false);
+const navItems = [
+  { name: 'Home', route: HOME_ROUTE },
+  { name: 'About', route: ABOUT_ROUTE },
+  { name: 'Information', route: INFORMATION_ROUTE },
+  { name: 'Contact', route: CONTACT_ROUTE },
+];
 
-  const [openSignInModal, setOpenSignInModal] = useState(false);
-  const handleSignInModalOpen = () => setOpenSignInModal(true);
-  const handleSignInModalClose = () => setOpenSignInModal(false);
+const NavBar = () => {
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const handleRegisterModalOpen = () => setOpenRegisterModal(true);
+  const handleRegisterModalClose = () => setOpenRegisterModal(false);
+
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+  const handleLoginModalOpen = () => setOpenLoginModal(true);
+  const handleLoginModalClose = () => setOpenLoginModal(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
 
   const { auth } = useAuth();
+  const logout = useLogout();
+  const navigate = useNavigate();
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
+  const handleLogout = async () => {
+    await logout();
+    navigate(HOME_ROUTE);
   };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const navItems = ['Home', 'About', 'Information', 'Contact'];
-  const getRoute = (item) => {
-    // TODO: Modify this to be Open-Closed
-    switch (item) {
-      case 'Home':
-        return '/';
-      case 'About':
-        return '/about';
-      case 'Contact':
-        return '/contact';
-      case 'Information':
-        return '/information';
-      default:
-        return '/';
-    }
-  };
-
   const navButtons = (
     <Box className={Style.flexDisplay}>
       {navItems.map((item) => (
-        <Link key={item} className={Style.Link} to={getRoute(item)}>
-          <Button className={Style.buttonColor}>{item}</Button>
+        <Link key={item.name} className={Style.Link} to={item.route}>
+          <Button className={Style.buttonColor}>{item.name}</Button>
         </Link>
       ))}
     </Box>
@@ -89,14 +72,11 @@ export default function NavBar() {
 
   return (
     <>
-      <SignUpModal
-        open={openSignUpModal}
-        handleClose={handleSignUpModalClose}
+      <RegisterModal
+        open={openRegisterModal}
+        handleClose={handleRegisterModalClose}
       />
-      <SignInModal
-        open={openSignInModal}
-        handleClose={handleSignInModalClose}
-      />
+      <LoginModal open={openLoginModal} handleClose={handleLoginModalClose} />
       <Box className={Style.grow}>
         <AppBar className={Style.appBarPosition}>
           <Toolbar className={Style.toolbar}>
@@ -112,22 +92,25 @@ export default function NavBar() {
             )}
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
-              {auth?.user && auth?.user?.firstName && auth?.user?.lastName ? (
+              {auth?.user && auth.user.firstName && auth.user.lastName ? (
                 <>
                   <Typography variant='h6'>
-                    Welcome {auth.user.firstName} {auth?.user?.lastName}!
+                    Welcome {auth.user.firstName} {auth.user.lastName}!
                   </Typography>
+                  <Button onClick={handleLogout} className={Style.buttonColor}>
+                    Logout
+                  </Button>
                 </>
               ) : (
                 <>
                   <Button
-                    onClick={handleSignInModalOpen}
+                    onClick={handleLoginModalOpen}
                     className={Style.buttonColor}
                   >
                     Login
                   </Button>
                   <Button
-                    onClick={handleSignUpModalOpen}
+                    onClick={handleRegisterModalOpen}
                     className={Style.buttonColor}
                   >
                     Register
@@ -140,8 +123,7 @@ export default function NavBar() {
         {isMobile && (
           <Drawer anchor='left' open={drawerOpen} onClose={handleDrawerToggle}>
             <DrawerContent
-              navItems={navItems}
-              getRoute={getRoute}
+              items={navItems}
               handleDrawerToggle={handleDrawerToggle}
             />
           </Drawer>
@@ -149,4 +131,6 @@ export default function NavBar() {
       </Box>
     </>
   );
-}
+};
+
+export default NavBar;

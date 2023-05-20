@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:9200/api';
+const API_ROUTE = import.meta.env.VITE_APP_API_ROUTE;
 
 export default axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_ROUTE,
 });
 
 export const axiosPrivate = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_ROUTE,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });

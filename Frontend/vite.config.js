@@ -12,6 +12,7 @@ export default defineConfig({
       Pages: path.resolve(__dirname, 'src/Pages'),
       Api: path.resolve(__dirname, 'src/Api'),
       Contexts: path.resolve(__dirname, 'src/Contexts'),
+      Routes: path.resolve(__dirname, 'src/Routes'),
     },
   },
   server: {

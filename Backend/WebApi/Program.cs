@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(options =>
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["X-Access-Token"];
+                context.Token = context.Request.Cookies["Access-Token"];
                 return Task.CompletedTask;
             },
         };

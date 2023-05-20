@@ -2,6 +2,10 @@
   text-decoration: none;
 }
 
+.drawerButtonColor {
+  color: #000;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -24,6 +28,3 @@
   color: #fff;
 }
 
-.drawerButtonColor {
-  color: #000;
-}

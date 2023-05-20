@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import useAuth from 'Hooks/useAuth';
+
+import axios from 'Api/Axios';
+
+import Style from './LoginModal.module.css';
 
 import {
   Avatar,
@@ -15,35 +20,10 @@ import {
   Modal,
   Fade,
 } from '@mui/material';
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Copyright from 'Components/Copyright';
 
-import axios from 'axios';
-
-import Style from './SignInModal.module.css';
-
-import useAuth from '../../Hooks/useAuth';
-
-function Copyright(props) {
-  return (
-    <Typography
-      className={Style.copyrightTypography}
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-export default function SignInModal({ open, handleClose }) {
+const LoginModal = ({ open, handleClose }) => {
   const { setAuth } = useAuth();
 
   const [errors, setErrors] = useState({});
@@ -58,15 +38,10 @@ export default function SignInModal({ open, handleClose }) {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:9200/api/auth/login',
-        userLoginData,
-        { withCredentials: true }
-      );
-      const userData = {
-        user: response.data?.data,
-      };
-      setAuth(userData);
+      const response = await axios.post('/auth/login', userLoginData, {
+        withCredentials: true,
+      });
+      setAuth(response.data?.data);
       handleClose();
     } catch (error) {
       if (error.response && error.response.data) {
@@ -102,7 +77,7 @@ export default function SignInModal({ open, handleClose }) {
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component='h1' variant='h5'>
-                Sign in
+                Login
               </Typography>
               <Box
                 component='form'
@@ -145,7 +120,7 @@ export default function SignInModal({ open, handleClose }) {
                   color='primary'
                   className={Style.submitButton}
                 >
-                  Sign In
+                  Login
                 </Button>
                 <Grid container>
                   <Grid item xs>
@@ -155,7 +130,7 @@ export default function SignInModal({ open, handleClose }) {
                   </Grid>
                   <Grid item>
                     <Link href='#' variant='body2'>
-                      {"Don't have an account? Sign Up"}
+                      {"Don't have an account? Register"}
                     </Link>
                   </Grid>
                 </Grid>
@@ -167,4 +142,6 @@ export default function SignInModal({ open, handleClose }) {
       </Fade>
     </Modal>
   );
-}
+};
+
+export default LoginModal;

@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+import axios from 'Api/Axios';
+
+import Style from './RegisterModal.module.css';
+
 import {
   Avatar,
   Button,
@@ -17,33 +21,10 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Copyright from 'Components/Copyright';
 
-import Style from './SignUpModal.module.css';
-
-import axios from 'axios';
-
-function Copyright(props) {
-  return (
-    <Typography
-      className={Style.copyrightTypography}
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-export default function SignUpModal({ open, handleClose }) {
+const RegisterModal = ({ open, handleClose }) => {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
@@ -57,10 +38,7 @@ export default function SignUpModal({ open, handleClose }) {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:9200/api/auth/register',
-        userData
-      );
+      const response = await axios.post('/auth/register', userData);
 
       handleClose();
     } catch (error) {
@@ -98,7 +76,7 @@ export default function SignUpModal({ open, handleClose }) {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component='h1' variant='h5'>
-                  Sign up
+                  Register
                 </Typography>
                 <Box
                   component='form'
@@ -172,12 +150,12 @@ export default function SignUpModal({ open, handleClose }) {
                     variant='contained'
                     className={Style.submitButton}
                   >
-                    Sign Up
+                    Register
                   </Button>
                   <Grid container justifyContent='flex-end'>
                     <Grid item>
                       <Link href='#' variant='body2'>
-                        Already have an account? Sign in
+                        Already have an account? Login
                       </Link>
                     </Grid>
                   </Grid>
@@ -190,4 +168,6 @@ export default function SignUpModal({ open, handleClose }) {
       </Modal>
     </>
   );
-}
+};
+
+export default RegisterModal;

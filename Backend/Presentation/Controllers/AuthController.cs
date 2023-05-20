@@ -48,12 +48,12 @@ public class AuthController : BaseController
         if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
             return Unauthorized();
 
-        Response.Cookies.Append("X-Access-Token", authResponse.AccessToken, new CookieOptions
+        Response.Cookies.Append("Access-Token", authResponse.AccessToken, new CookieOptions
         {
             HttpOnly = true
         });
 
-        Response.Cookies.Append("X-Refresh-Token", authResponse.RefreshToken, new CookieOptions
+        Response.Cookies.Append("Refresh-Token", authResponse.RefreshToken, new CookieOptions
         {
             HttpOnly = true
         });
@@ -64,7 +64,7 @@ public class AuthController : BaseController
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken()
     {
-        var refreshToken = Request.Cookies["X-Refresh-Token"];
+        var refreshToken = Request.Cookies["Refresh-Token"];
         if (refreshToken == null)
         {
             return Unauthorized();
@@ -80,12 +80,12 @@ public class AuthController : BaseController
         if (authResponse.AccessToken is null || authResponse.RefreshToken is null)
             return Unauthorized();
 
-        Response.Cookies.Append("X-Access-Token", authResponse.AccessToken, new CookieOptions
+        Response.Cookies.Append("Access-Token", authResponse.AccessToken, new CookieOptions
         {
             HttpOnly = true
         });
 
-        Response.Cookies.Append("X-Refresh-Token", authResponse.RefreshToken, new CookieOptions
+        Response.Cookies.Append("Refresh-Token", authResponse.RefreshToken, new CookieOptions
         {
             HttpOnly = true
         });
@@ -93,15 +93,24 @@ public class AuthController : BaseController
         return Ok(authResponse.Response);
     }
 
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout(string refreshToken)
+    [HttpDelete("logout")]
+    public async Task<IActionResult> Logout()
     {
+        var refreshToken = Request.Cookies["Refresh-Token"];
+        if (refreshToken == null)
+        {
+            return Unauthorized();
+        }
+
         var result = await _authService.InvalidateTokenAsync(refreshToken);
 
         if (!result)
         {
             return Unauthorized();
         }
+
+        Response.Cookies.Delete("Access-Token");
+        Response.Cookies.Delete("Refresh-Token");
 
         return NoContent();
     }
