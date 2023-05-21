@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AirleganceDbContext))]
-    [Migration("20230514145204_UserTokensMigration")]
-    partial class UserTokensMigration
+    [Migration("20230521184401_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.UserToken", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithOne("Token")
+                        .WithOne("UserToken")
                         .HasForeignKey("Domain.Entities.UserToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -140,7 +140,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Token");
+                    b.Navigation("UserToken");
                 });
 #pragma warning restore 612, 618
         }
