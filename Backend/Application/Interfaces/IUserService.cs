@@ -9,4 +9,5 @@ public interface IUsersService
         UserRegistrationRequestDto userRegistrationRequestDto);
 
     public Task<User?> GetUserByEmailAsync(string email);
+    public Task DeleteUserIfExistsByEmailAsync(string email);
 }

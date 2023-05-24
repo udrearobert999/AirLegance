@@ -1,4 +1,5 @@
-﻿using Domain.Core;
+﻿using System.Linq.Expressions;
+using Domain.Core;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,11 @@ public class Repository<TEntity, TKey> : ReadOnlyRepository<TEntity, TKey>, IRep
     public void Delete(TEntity entity)
     {
         _dbSet.Remove(entity);
+    }
+
+    public void DeleteBy(Expression<Func<TEntity, bool>> predicate)
+    {
+        _dbSet.RemoveRange(_dbSet.Where(predicate));
     }
 
     public void DeleteRange(IEnumerable<TEntity> entities)

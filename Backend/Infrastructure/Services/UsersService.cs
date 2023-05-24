@@ -65,4 +65,10 @@ public class UsersService : IUsersService
 
         return user;
     }
+
+    public async Task DeleteUserIfExistsByEmailAsync(string email)
+    {
+        _unitOfWork.Users.DeleteBy(user => user.Email == email);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }

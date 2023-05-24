@@ -1,4 +1,5 @@
-﻿using Domain.Core;
+﻿using System.Linq.Expressions;
+using Domain.Core;
 using Domain.Entities;
 
 namespace UnitTests.Mocks;
@@ -31,6 +32,11 @@ internal class MockRepository<TEntity, TKey> : MockReadOnlyRepository<TEntity, T
     public void Delete(TEntity entity)
     {
         _store.Remove(entity.Id);
+    }
+
+    public void DeleteBy(Expression<Func<TEntity, bool>> predicate)
+    {
+        throw new NotImplementedException();
     }
 
     public void DeleteRange(IEnumerable<TEntity> entities)
