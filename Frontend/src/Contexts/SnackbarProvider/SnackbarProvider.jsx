@@ -3,6 +3,8 @@ import { Snackbar, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export const SnackbarContext = createContext();
 
 export const SnackbarProvider = ({ children }) => {
@@ -11,7 +13,7 @@ export const SnackbarProvider = ({ children }) => {
   const openSnackbar = useCallback((message, variant) => {
     setSnackbars((oldSnackbars) => [
       ...oldSnackbars,
-      { id: new Date().getTime(), message, variant },
+      { id: uuidv4(), message, variant },
     ]);
   }, []);
 
@@ -40,7 +42,7 @@ export const SnackbarProvider = ({ children }) => {
           key={snackbar.id}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           open={true}
-          autoHideDuration={2000}
+          autoHideDuration={3000}
           onClose={() => closeSnackbar(snackbar.id)}
           action={
             <IconButton

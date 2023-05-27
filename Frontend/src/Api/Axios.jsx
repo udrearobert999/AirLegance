@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_ROUTE = import.meta.env.VITE_APP_API_ROUTE;
+export const API_ROUTE = import.meta.env.VITE_APP_API_ROUTE;
 
 export default axios.create({
   baseURL: API_ROUTE,
