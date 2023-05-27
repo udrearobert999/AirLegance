@@ -13,17 +13,20 @@ import { AuthProvider } from './Contexts/AuthProvider';
 import App from './App';
 
 import { BrowserRouter } from 'react-router-dom';
+import { SnackbarProvider } from './Contexts/SnackbarProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={createTheme()}>
-        <BrowserRouter>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </BrowserRouter>
+        <SnackbarProvider>
+          <BrowserRouter>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </BrowserRouter>
+        </SnackbarProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>
