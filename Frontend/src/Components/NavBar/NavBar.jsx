@@ -62,6 +62,14 @@ const NavBar = () => {
 
   const navButtons = (
     <Box className={Style.flexDisplay}>
+      <IconButton
+        edge='start'
+        color='inherit'
+        aria-label='menu'
+        className={Style.logoContainer}
+      >
+        <img src='/AirLegance.png' alt='Logo' />
+      </IconButton>
       {navItems.map((item) => (
         <Link key={item.name} className={Style.Link} to={item.route}>
           <Button className={Style.buttonColor}>{item.name}</Button>
@@ -78,34 +86,33 @@ const NavBar = () => {
       />
       <LoginModal open={openLoginModal} handleClose={handleLoginModalClose} />
       <Box className={Style.grow}>
-        <AppBar className={Style.appBarPosition}>
+        <AppBar elevation={6} className={Style.appBarPosition}>
           <Toolbar className={Style.toolbar}>
             {isMobile && (
-              <IconButton
-                edge='start'
-                color='inherit'
-                aria-label='menu'
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon />
-              </IconButton>
+              <Link to={HOME_ROUTE}>
+                <IconButton
+                  edge='start'
+                  color='inherit'
+                  aria-label='menu'
+                  onClick={handleDrawerToggle}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Link>
             )}
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
               {auth?.user && auth.user.firstName && auth.user.lastName ? (
                 <>
-                  <Typography variant='h6'>
-                    Welcome {auth.user.firstName} {auth.user.lastName}!
+                  <Typography variant='h6' className={Style.buttonColor}>
+                    {auth.user.firstName} {auth.user.lastName}
                   </Typography>
-                  <Button onClick={handleLogout} className={Style.buttonColor}>
-                    Logout
-                  </Button>
                 </>
               ) : (
                 <>
                   <Button
-                    onClick={handleLoginModalOpen}
                     className={Style.buttonColor}
+                    onClick={handleLoginModalOpen}
                   >
                     Login
                   </Button>

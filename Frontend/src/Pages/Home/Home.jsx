@@ -57,17 +57,16 @@ const Home = () => {
         showStatus={false}
         showThumbs={false}
       >
-        <div>
+        <div className={Style.imageContainer}>
           <img src='/carousel-pic1.jpg' alt='carousel-image' />
         </div>
-        <div>
+        <div className={Style.imageContainer}>
           <img src='/carousel-pic2.avif' alt='carousel-image' />
         </div>
-        <div>
+        <div className={Style.imageContainer}>
           <img src='/carousel-pic3.jpg' alt='carousel-image' />
         </div>
       </Carousel>
-      <br></br>
       <Card sx={{ width: '80%', mt: 2 }} className={Style.card}>
         <CardContent>
           <LocalizationProvider dateAdapter={AdapterDateFns}>

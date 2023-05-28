@@ -11,7 +11,8 @@
 }
 
 .appBarPosition {
-  position: static;
+  position: relative;
+  background: white
 }
 
 .toolbar {
@@ -25,6 +26,17 @@
 }
 
 .buttonColor {
-  color: #fff;
+  color: black;
 }
 
+.logoContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 3rem;
+  margin-left: 2rem;
+}
+
+.logoContainer > img 
+{
+  max-height: 4.5rem;
+}

@@ -9,7 +9,7 @@
     background-size: cover;
 }
 
-img {
+.imageContainer  > img {
   height: 40rem;
   object-fit: cover;
 }
