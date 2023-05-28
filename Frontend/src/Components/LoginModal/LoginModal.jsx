@@ -57,7 +57,6 @@ const LoginModal = ({ open, handleClose }) => {
 
   return (
     <Modal
-      id="login-modal"
       aria-labelledby='transition-modal-title'
       aria-describedby='transition-modal-description'
       open={open}
@@ -115,7 +114,6 @@ const LoginModal = ({ open, handleClose }) => {
                   label='Remember me'
                 />
                 <Button
-                  id="login-button"
                   type='submit'
                   fullWidth
                   variant='contained'
