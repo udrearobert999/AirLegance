@@ -106,6 +106,7 @@ export default function Contact() {
                   </Grid>
                   <Grid xs={12} item>
                     <TextField
+                      name='email'
                       type='email'
                       label='Email'
                       placeholder='Enter email'
@@ -137,7 +138,7 @@ export default function Contact() {
                   color='primary'
                   fullWidth
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Login'}
+                  {loading ? <CircularProgress size={24} /> : 'Submit'}
                 </Button>
               </Grid>
             </Grid>
