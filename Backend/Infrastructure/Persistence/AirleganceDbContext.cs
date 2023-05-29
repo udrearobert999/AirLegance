@@ -12,6 +12,9 @@ public partial class AirleganceDbContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Location> Locations { get; set; } = null!;
+    public DbSet<Flight> Flights { get; set; } = null!;
+    public DbSet<FlightSchedule> FlightSchedule { get; set; } = null!;
     public DbSet<UserToken> UserTokens { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -71,6 +74,73 @@ public partial class AirleganceDbContext : DbContext
                 .WithOne(u => u.UserToken)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<Location>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
+            entity.Property(e => e.Country).IsRequired();
+            entity.Property(e => e.City).IsRequired();
+        });
+
+        modelBuilder.Entity<Flight>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
+            entity.HasOne(f => f.SourceLocation)
+                .WithMany()
+                .HasForeignKey(f => f.SourceLocationId);
+
+            entity.HasOne(f => f.DestinationLocation)
+                .WithMany()
+                .HasForeignKey(f => f.DestinationLocationId);
+
+            entity.Property(e => e.Price).IsRequired();
+            entity.Property(e => e.Rating).IsRequired();
+        });
+
+        modelBuilder.Entity<FlightSchedule>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
+            entity.HasOne(fs => fs.Flight)
+                .WithMany()
+                .HasForeignKey(fs => fs.FlightId);
+
+            entity.HasOne(fs => fs.User)
+                .WithMany(u => u.FlightSchedules)
+                .HasForeignKey(fs => fs.UserId);
+
+            entity.Property(e => e.StartDate).IsRequired();
+            entity.Property(e => e.EndDate).IsRequired();
+        });
+
+        modelBuilder.Entity<Flight>()
+            .HasOne(f => f.SourceLocation)
+            .WithMany(l => l.SourceFlights)
+            .HasForeignKey(f => f.SourceLocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Flight>()
+            .HasOne(f => f.DestinationLocation)
+            .WithMany(l => l.DestinationFlights)
+            .HasForeignKey(f => f.DestinationLocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<FlightSchedule>()
+            .HasOne(fs => fs.User)
+            .WithMany(u => u.FlightSchedules)
+            .HasForeignKey(fs => fs.UserId);
+
 
         OnModelCreatingPartial(modelBuilder);
     }

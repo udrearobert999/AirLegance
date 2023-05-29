@@ -120,6 +120,7 @@ export default function Contact() {
 
               <Grid xs={12} item>
                 <TextField
+                  id="complaintMessageBox"
                   label='message'
                   multiline
                   rows={4}

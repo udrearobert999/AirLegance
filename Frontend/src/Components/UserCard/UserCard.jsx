@@ -47,6 +47,7 @@ const UserCard = ({ name }) => {
   return (
     <>
       <Card
+        id='userCard'
         onClick={handleClick}
         variant='outlined'
         style={{ borderRadius: 40, padding: 0 }}
