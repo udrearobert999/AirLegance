@@ -37,9 +37,9 @@ namespace UnitTests.Tests
             submitButton.Click();
 
             new WebDriverWait(_driver, TimeSpan.FromSeconds(5)).Until(d =>
-                            d.FindElements(By.XPath("//*[contains(text(),'Welcome')]")).Count > 0);
-            var welcomeMessage = _driver.FindElement(By.XPath("//*[contains(text(),'Welcome')]")).Text;
-            Assert.Contains("Welcome", welcomeMessage);
+                            d.FindElements(By.Id("userCard")).Count > 0);
+            var welcomeMessage = _driver.FindElement(By.Id("userCard"));
+            Assert.NotNull(welcomeMessage);
         }
         public void Dispose()
         {
