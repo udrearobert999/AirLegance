@@ -8,3 +8,19 @@
     height: 800px;
     background-size: cover;
 }
+
+.imageContainer  > img {
+  height: 40rem;
+  object-fit: cover;
+}
+
+.carousel {
+  position: relative;
+}
+
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

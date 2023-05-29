@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import axios from 'Api/Axios';
+import useAxiosWithErrorRedirect from 'Hooks/useAxiosWithErrorRedirect';
+import useSnackbar from 'Hooks/useSnackBar';
 
 import Style from './RegisterModal.module.css';
 
@@ -18,14 +19,17 @@ import {
   Backdrop,
   Modal,
   Fade,
-  Snackbar,
-  Alert,
+  CircularProgress,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from 'Components/Copyright';
 
 const RegisterModal = ({ open, handleClose }) => {
+  const axios = useAxiosWithErrorRedirect();
+  const { openSuccessSnackbar } = useSnackbar();
+
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,9 +41,12 @@ const RegisterModal = ({ open, handleClose }) => {
       password: data.get('password'),
     };
 
+    setLoading(true);
+
     try {
       const response = await axios.post('/auth/register', userData);
 
+      openSuccessSnackbar('User registered successfully');
       handleClose();
     } catch (error) {
       if (error.response && error.response.data) {
@@ -50,6 +57,8 @@ const RegisterModal = ({ open, handleClose }) => {
 
         setErrors(errorData);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,8 +158,9 @@ const RegisterModal = ({ open, handleClose }) => {
                     fullWidth
                     variant='contained'
                     className={Style.submitButton}
+                    disabled={loading}
                   >
-                    Register
+                    {loading ? <CircularProgress size={24} /> : 'Register'}
                   </Button>
                   <Grid container justifyContent='flex-end'>
                     <Grid item>

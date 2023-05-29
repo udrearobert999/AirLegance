@@ -1,9 +1,9 @@
-import axios from 'Api/Axios';
-
+import useAxiosWithErrorRedirect from './useAxiosWithErrorRedirect';
 import useAuth from './useAuth';
 
 const useLogout = () => {
   const { setAuth } = useAuth();
+  const axios = useAxiosWithErrorRedirect();
 
   const logout = async () => {
     setAuth(null);

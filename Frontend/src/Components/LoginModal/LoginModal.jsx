@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useAuth from 'Hooks/useAuth';
 
-import axios from 'Api/Axios';
+import useAxiosWithErrorRedirect from 'Hooks/useAxiosWithErrorRedirect';
 
 import Style from './LoginModal.module.css';
 
@@ -19,13 +19,16 @@ import {
   Backdrop,
   Modal,
   Fade,
+  CircularProgress,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from 'Components/Copyright';
 
 const LoginModal = ({ open, handleClose }) => {
   const { setAuth } = useAuth();
+  const axios = useAxiosWithErrorRedirect();
 
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
@@ -36,6 +39,8 @@ const LoginModal = ({ open, handleClose }) => {
       email: data.get('email'),
       password: data.get('password'),
     };
+
+    setLoading(true);
 
     try {
       const response = await axios.post('/auth/login', userLoginData, {
@@ -52,6 +57,8 @@ const LoginModal = ({ open, handleClose }) => {
 
         setErrors(errorData);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,8 +126,9 @@ const LoginModal = ({ open, handleClose }) => {
                   variant='contained'
                   color='primary'
                   className={Style.submitButton}
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? <CircularProgress size={24} /> : 'Login'}
                 </Button>
                 <Grid container>
                   <Grid item xs>
