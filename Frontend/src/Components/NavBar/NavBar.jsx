@@ -62,14 +62,16 @@ const NavBar = () => {
 
   const navButtons = (
     <Box className={Style.flexDisplay}>
-      <IconButton
-        edge='start'
-        color='inherit'
-        aria-label='menu'
-        className={Style.logoContainer}
-      >
-        <img src='/AirLegance.png' alt='Logo' />
-      </IconButton>
+      <Link to={HOME_ROUTE}>
+        <IconButton
+          edge='start'
+          color='inherit'
+          aria-label='menu'
+          className={Style.logoContainer}
+        >
+          <img src='/AirLegance.png' alt='Logo' />
+        </IconButton>
+      </Link>
       {navItems.map((item) => (
         <Link key={item.name} className={Style.Link} to={item.route}>
           <Button className={Style.buttonColor}>{item.name}</Button>
@@ -89,16 +91,14 @@ const NavBar = () => {
         <AppBar elevation={6} className={Style.appBarPosition}>
           <Toolbar className={Style.toolbar}>
             {isMobile && (
-              <Link to={HOME_ROUTE}>
-                <IconButton
-                  edge='start'
-                  color='inherit'
-                  aria-label='menu'
-                  onClick={handleDrawerToggle}
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Link>
+              <IconButton
+                edge='start'
+                color='inherit'
+                aria-label='menu'
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
             )}
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
