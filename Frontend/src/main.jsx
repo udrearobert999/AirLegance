@@ -13,7 +13,8 @@ import { AuthProvider } from './Contexts/AuthProvider';
 import App from './App';
 
 import { BrowserRouter } from 'react-router-dom';
-import { SnackbarProvider } from './Contexts/SnackbarProvider';
+import { SnackbarProvider } from 'Contexts/SnackbarProvider';
+import { LoginModalProvider } from 'Contexts/LoginModalProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,7 +24,9 @@ root.render(
         <SnackbarProvider>
           <BrowserRouter>
             <AuthProvider>
-              <App />
+              <LoginModalProvider>
+                <App />
+              </LoginModalProvider>
             </AuthProvider>
           </BrowserRouter>
         </SnackbarProvider>

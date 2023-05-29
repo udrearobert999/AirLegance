@@ -67,7 +67,7 @@ const Home = () => {
           <img src='/carousel-pic3.jpg' alt='carousel-image' />
         </div>
       </Carousel>
-      <Card sx={{ width: '80%', mt: 2 }} className={Style.card}>
+      <Card className={Style.card}>
         <CardContent>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Box
@@ -115,7 +115,11 @@ const Home = () => {
                   renderInput={(params) => <TextField {...params} />}
                 />
               </Box>
-              <Button type='submit' variant='contained'>
+              <Button
+                type='submit'
+                variant='contained'
+                className={Style.buttonAccent}
+              >
                 Search
               </Button>
             </Box>

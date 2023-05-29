@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useAuth from 'Hooks/useAuth';
-import useLogout from 'Hooks/useLogout';
+import useLoginModal from 'Hooks/useLoginModal';
 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import RegisterModal from 'Components/RegisterModal';
 import LoginModal from 'Components/LoginModal';
 import DrawerContent from 'Components/DrawerContent';
+import UserCard from 'Components/UserCard';
 
 import Style from './NavBar.module.css';
 
@@ -41,21 +42,13 @@ const NavBar = () => {
   const handleRegisterModalOpen = () => setOpenRegisterModal(true);
   const handleRegisterModalClose = () => setOpenRegisterModal(false);
 
-  const [openLoginModal, setOpenLoginModal] = useState(false);
-  const handleLoginModalOpen = () => setOpenLoginModal(true);
-  const handleLoginModalClose = () => setOpenLoginModal(false);
+  const { openLoginModal, handleLoginModalOpen, handleLoginModalClose } =
+    useLoginModal();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
 
   const { auth } = useAuth();
-  const logout = useLogout();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate(HOME_ROUTE);
-  };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -95,6 +88,7 @@ const NavBar = () => {
                 edge='start'
                 color='inherit'
                 aria-label='menu'
+                className={Style.menuButton}
                 onClick={handleDrawerToggle}
               >
                 <MenuIcon />
@@ -103,11 +97,7 @@ const NavBar = () => {
             {!isMobile && navButtons}
             <Box className={Style.flexDisplay}>
               {auth?.user && auth.user.firstName && auth.user.lastName ? (
-                <>
-                  <Typography variant='h6' className={Style.buttonColor}>
-                    {auth.user.firstName} {auth.user.lastName}
-                  </Typography>
-                </>
+                <UserCard name={auth.user.firstName} />
               ) : (
                 <>
                   <Button

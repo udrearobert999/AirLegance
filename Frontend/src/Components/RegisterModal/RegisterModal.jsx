@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import useAxiosWithErrorRedirect from 'Hooks/useAxiosWithErrorRedirect';
-import useSnackbar from 'Hooks/useSnackBar';
+import useSnackbar from 'Hooks/useSnackbar';
 
 import Style from './RegisterModal.module.css';
 

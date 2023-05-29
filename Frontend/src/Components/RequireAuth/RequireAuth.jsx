@@ -1,16 +1,45 @@
-import { useLocation, Navigate, Outlet } from 'react-router-dom';
-import useAuth from '../../Hooks/useAuth';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from 'Hooks/useAuth';
+import usePrevious from 'Hooks/usePrevious';
 
-const RequireAuth = () => {
+import { Outlet } from 'react-router-dom';
+
+import { HOME_ROUTE } from 'Routes';
+
+import useLoginModal from 'Hooks/useLoginModal';
+
+function RequireAuth({ allowedRoles }) {
   const { auth } = useAuth();
-  const location = useLocation();
-  console.log(auth);
+  const { handleLoginModalOpen, handleLoginModalClose, openLoginModal } =
+    useLoginModal();
+  const navigate = useNavigate();
 
-  return auth?.user ? (
-    <Outlet />
-  ) : (
-    <Navigate to={{ pathname: '/login', state: { from: location } }} replace />
-  );
-};
+  const prevOpenLoginModal = usePrevious(openLoginModal);
+
+  useEffect(() => {
+    if (!auth?.user && !openLoginModal) {
+      handleLoginModalOpen();
+    }
+  }, [auth, openLoginModal, handleLoginModalOpen]);
+
+  useEffect(() => {
+    if (prevOpenLoginModal && !openLoginModal && !auth?.user) {
+      navigate(HOME_ROUTE);
+      handleLoginModalClose();
+    }
+  }, [prevOpenLoginModal, openLoginModal, auth, navigate]);
+
+  if (!auth?.user) {
+    return null;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(auth.user.role)) {
+    navigate(HOME_ROUTE);
+    handleLoginModalClose();
+  }
+
+  return <Outlet />;
+}
 
 export default RequireAuth;

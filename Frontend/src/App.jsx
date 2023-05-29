@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 import Home from './Pages/Home';
+import Profile from './Pages/Profile';
 import About from './Pages/About';
 import Contact from './Pages/Contact';
 import Information from './Pages/Information';
@@ -11,7 +12,7 @@ import * as routes from './Routes';
 
 import './App.css';
 import PersistLogin from './Components/PersistLogin';
-import NetworkError from './Pages/NetworkError/NetworkError';
+import RequireAuth from './Components/RequireAuth';
 
 export default function App() {
   return (
@@ -19,7 +20,6 @@ export default function App() {
       <NavBar />
       <div className='container'>
         <Routes>
-          <Route path={routes.NETWORK_ERROR_ROUTE} element={<NetworkError />} />
           <Route element={<PersistLogin />}>
             <Route exact path={routes.HOME_ROUTE} element={<Home />} />
             <Route exact path={routes.ABOUT_ROUTE} element={<About />} />
@@ -29,6 +29,10 @@ export default function App() {
               path={routes.INFORMATION_ROUTE}
               element={<Information />}
             />
+
+            <Route element={<RequireAuth />}>
+              <Route exact path={routes.PROFILE_ROUTE} element={<Profile />} />
+            </Route>
           </Route>
         </Routes>
       </div>
