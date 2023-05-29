@@ -31,6 +31,9 @@ public static class DependencyInjection
         services.AddScoped<IValidator<UserRegistrationRequestDto>, UserRegistrationDtoValidator>();
         services.AddScoped<IValidator<UserLoginRequestDto>, UserLoginDtoValidator>();
 
+        services.AddScoped<IReadOnlyRepository<Location, Guid>, ReadOnlyRepository<Location, Guid>>();
+        services.AddScoped<IRepository<Location, Guid>, Repository<Location, Guid>>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services registrations

@@ -106,6 +106,7 @@ export default function Contact() {
                   </Grid>
                   <Grid xs={12} item>
                     <TextField
+                      name='email'
                       type='email'
                       label='Email'
                       placeholder='Enter email'

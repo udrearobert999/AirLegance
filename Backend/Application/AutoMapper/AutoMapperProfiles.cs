@@ -12,5 +12,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<User, UserRegistrationResponseDto>();
 
         CreateMap<User, UserAuthResponseDto>();
+
+        CreateMap<Location, LocationDto>().ReverseMap();
     }
 }
