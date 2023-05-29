@@ -187,14 +187,14 @@ public class JwtAuthService : IAuthService
             issuer: user.Id.ToString(),
             audience: null,
             claims: claims,
-            expires: DateTime.Now.AddSeconds(15),
+            expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials);
 
         var refreshToken = new JwtSecurityToken(
             issuer: user.Id.ToString(),
             audience: null,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(2),
+            expires: DateTime.Now.AddDays(2),
             signingCredentials: credentials
         );
 
