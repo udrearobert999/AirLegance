@@ -24,7 +24,6 @@ namespace Infrastructure.Services
                 complaintDto.Message, complaintDto.Message);
 
             await client.SendEmailAsync(sentMail);
-            var k = sentMail.HtmlContent;
 
             string acknowledgmentBody = $"Dear {complaintDto.FirstName} {complaintDto.LastName},\n\n" +
                                         "Your complaint has been submitted successfully!\n\n" +
