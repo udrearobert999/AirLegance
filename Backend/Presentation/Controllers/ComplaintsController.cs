@@ -29,10 +29,8 @@ namespace Presentation.Controllers
                          "Best regards,\n" +
                          "AirLegance Team";
 
-            // Send email using the SendGrid service
             await _emailService.SendEmail(complaint.Email, "Complaint Submission", emailContent);
 
-            // Optionally, you can return a response indicating the success of the operation
             return Ok();
         }
     }

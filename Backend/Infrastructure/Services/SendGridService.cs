@@ -1,21 +1,16 @@
 ﻿using Application.Interfaces;
 using SendGrid.Helpers.Mail;
 using SendGrid;
-using Application.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class SendGridService : IEmailService
+    public class SendGridEmailService : IEmailService
     {
         private readonly string _sendGridApiKey;
 
-        public SendGridService()
+        public SendGridEmailService()
         {
+            // TODO: it is generaly a good practice to move it in appsetings.json
             _sendGridApiKey = "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";
         }
 
