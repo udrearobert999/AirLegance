@@ -14,6 +14,7 @@ internal class MockUnitOfWork : IUnitOfWork
 
     public IUsersRepository Users => _usersRepository;
     public IReadOnlyRepository<Location, Guid> Location { get; }
+    public IFlightsRepository Flights { get; }
 
     public async Task<int> SaveChangesAsync()
     {

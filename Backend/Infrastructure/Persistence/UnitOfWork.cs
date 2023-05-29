@@ -8,6 +8,7 @@ public class UnitOfWork : IUnitOfWork
 {
     public IUsersRepository Users { get; }
     public IReadOnlyRepository<Location, Guid> Location { get; }
+    public IFlightsRepository Flights { get; }
 
     private readonly AirleganceDbContext _dbContext;
 
@@ -16,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
         _dbContext = dbContext;
         Users = new UsersRepository(_dbContext);
         Location = new ReadOnlyRepository<Location, Guid>(_dbContext);
+        Flights = new FlightsRepository(_dbContext);
     }
 
     public async Task<int> SaveChangesAsync()

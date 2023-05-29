@@ -34,6 +34,10 @@ public static class DependencyInjection
         services.AddScoped<IReadOnlyRepository<Location, Guid>, ReadOnlyRepository<Location, Guid>>();
         services.AddScoped<IRepository<Location, Guid>, Repository<Location, Guid>>();
 
+        services.AddScoped<IReadOnlyRepository<Flight, Guid>, ReadOnlyRepository<Flight, Guid>>();
+        services.AddScoped<IRepository<Flight, Guid>, Repository<Flight, Guid>>();
+        services.AddScoped<IFlightsRepository, FlightsRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services registrations

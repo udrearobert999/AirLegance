@@ -11,15 +11,37 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { Typography } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers';
 
+import FlightCard from 'Components/FlightCard';
+
+const FlightSearchResults = ({ flights }) => {
+  if (flights.length === 0) {
+    return (
+      <Typography variant='h6'>
+        No flights found. Please try a different search.
+      </Typography>
+    );
+  }
+
+  return (
+    <div>
+      {flights.map((flight) => (
+        <FlightCard key={flight.id} flight={flight} />
+      ))}
+    </div>
+  );
+};
+
 const Home = () => {
   const departureDateRef = useRef(null);
   const returnDateRef = useRef(null);
-  const originRef = useRef(null);
-  const destinationRef = useRef(null);
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [flights, setFlights] = useState([]);
 
   const axios = useAxiosWithErrorRedirect();
 
@@ -38,16 +60,26 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const handleSearch = (event) => {
-    event.preventDefault();
+  const handleOriginChange = (event, value) => {
+    setOrigin(value);
+  };
 
+  const handleDestinationChange = (event, value) => {
+    setDestination(value);
+  };
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
     const searchData = {
-      origin: originRef.current?.value,
-      destination: destinationRef.current?.value,
-      departureDate: departureDateRef.current?.value,
-      returnDate: returnDateRef.current?.value,
+      sourceLocationId: origin?.id,
+      destinationLocationId: destination?.id,
     };
-    console.log(searchData);
+    try {
+      const response = await axios.post('/flights/search-flight', searchData);
+      setFlights(response.data.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -84,28 +116,27 @@ const Home = () => {
             >
               <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                 <Autocomplete
-                  ref={originRef}
                   sx={{ width: '15rem' }}
                   id='origin'
-                  options={locations.map((location) => ({
-                    label: `${location.city} (${location.country})`,
-                    value: location.id,
-                  }))}
-                  getOptionLabel={(option) => option.label}
+                  options={locations}
+                  getOptionLabel={(option) =>
+                    `${option.city} (${option.country})`
+                  }
+                  value={origin}
+                  onChange={handleOriginChange}
                   renderInput={(params) => (
                     <TextField {...params} label='Origin' fullWidth />
                   )}
                 />
-
                 <Autocomplete
-                  inputRef={destinationRef}
                   sx={{ width: '15rem' }}
                   id='destination'
-                  options={locations.map((location) => ({
-                    label: `${location.city} (${location.country})`,
-                    value: location.id,
-                  }))}
-                  getOptionLabel={(option) => option.label}
+                  options={locations}
+                  getOptionLabel={(option) =>
+                    `${option.city} (${option.country})`
+                  }
+                  value={destination}
+                  onChange={handleDestinationChange}
                   renderInput={(params) => (
                     <TextField {...params} label='Destination' fullWidth />
                   )}
@@ -136,6 +167,7 @@ const Home = () => {
           </LocalizationProvider>
         </CardContent>
       </Card>
+      <FlightSearchResults flights={flights} />
     </>
   );
 };

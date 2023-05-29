@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IValidator<UserRegistrationRequestDto>, UserRegistrationDtoValidator>();
 
         services.AddTransient<ILocationsService, LocationsService>();
+        services.AddTransient<IFlightsService, FlightsService>();
 
         return services;
     }

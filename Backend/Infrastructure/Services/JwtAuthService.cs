@@ -39,13 +39,13 @@ public class JwtAuthService : IAuthService
         public string RefreshToken { get; set; }
     }
 
-    public async Task<AuthResponse> AuthenticateUserAsync(UserLoginRequestDto userRequestDto)
+    public async Task<AuthResponseDto> AuthenticateUserAsync(UserLoginRequestDto userRequestDto)
     {
         var validationResult = await _loginValidator.ValidateAsync(userRequestDto);
 
         if (!validationResult.IsValid)
         {
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Response = ResponseDto<UserAuthResponseDto?>.Failure(validationResult.Errors)
             };
@@ -57,7 +57,7 @@ public class JwtAuthService : IAuthService
         {
             var userNotFound = new ValidationFailure(nameof(userRequestDto.Email), "User not found!");
 
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Response = ResponseDto<UserAuthResponseDto?>.Failure(userNotFound)
             };
@@ -67,7 +67,7 @@ public class JwtAuthService : IAuthService
         {
             var incorrectPassword = new ValidationFailure(nameof(userRequestDto.Password), "Incorrect password!");
 
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Response = ResponseDto<UserAuthResponseDto?>.Failure(incorrectPassword)
             };
@@ -86,7 +86,7 @@ public class JwtAuthService : IAuthService
         return principal;
     }
 
-    public async Task<AuthResponse> RefreshTokenAsync(string refreshToken)
+    public async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken)
     {
         try
         {
@@ -96,7 +96,7 @@ public class JwtAuthService : IAuthService
         {
             var invalidTokenMessage = new ValidationFailure("RefreshToken", "Token is invalid!");
 
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Response = ResponseDto<UserAuthResponseDto?>.Failure(invalidTokenMessage)
             };
@@ -108,7 +108,7 @@ public class JwtAuthService : IAuthService
         {
             var userNotFound = new ValidationFailure("User", "User does not have a token!");
 
-            return new AuthResponse
+            return new AuthResponseDto
             {
                 Response = ResponseDto<UserAuthResponseDto?>.Failure(userNotFound)
             };
@@ -133,7 +133,7 @@ public class JwtAuthService : IAuthService
         return true;
     }
 
-    private async Task<AuthResponse> AuthenticateUserInternalAsync(User user)
+    private async Task<AuthResponseDto> AuthenticateUserInternalAsync(User user)
     {
         var authTokens = CreateAuthTokens(user);
 
@@ -155,7 +155,7 @@ public class JwtAuthService : IAuthService
 
         var authUserResponse = _mapper.Map<UserAuthResponseDto>(user);
 
-        var jwtDto = new AuthResponse
+        var jwtDto = new AuthResponseDto
         {
             AccessToken = authTokens.AccessToken,
             RefreshToken = authTokens.RefreshToken,
