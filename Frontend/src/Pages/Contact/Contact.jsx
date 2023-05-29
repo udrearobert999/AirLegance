@@ -119,6 +119,7 @@ export default function Contact() {
 
               <Grid xs={12} item>
                 <TextField
+                  id="complaintMessageBox"
                   label='message'
                   multiline
                   rows={4}
@@ -137,7 +138,7 @@ export default function Contact() {
                   color='primary'
                   fullWidth
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Login'}
+                  {loading ? <CircularProgress size={24} /> : 'Submit'}
                 </Button>
               </Grid>
             </Grid>

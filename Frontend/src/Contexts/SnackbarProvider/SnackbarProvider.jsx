@@ -39,6 +39,7 @@ export const SnackbarProvider = ({ children }) => {
       {children}
       {snackbars.map((snackbar) => (
         <Snackbar
+          id="snackbar"
           key={snackbar.id}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           open={true}
