@@ -1,4 +1,5 @@
 ﻿using Domain.Core;
+using Domain.Entities;
 
 namespace UnitTests.Mocks;
 
@@ -12,6 +13,7 @@ internal class MockUnitOfWork : IUnitOfWork
     }
 
     public IUsersRepository Users => _usersRepository;
+    public IReadOnlyRepository<Location, Guid> Location { get; }
 
     public async Task<int> SaveChangesAsync()
     {
