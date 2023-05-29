@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Dto;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Presentation.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ComplaintsController : ControllerBase
+    public class ComplaintsController : BaseController
     {
         private readonly IEmailService _emailService;
 
-        public ComplaintsController(IEmailService emailService)
+        public ComplaintsController(ILogger<BaseController> logger, IConfiguration configuration,
+            IEmailService emailService) : base(logger, configuration)
         {
             _emailService = emailService;
         }
@@ -23,17 +24,9 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitComplaint([FromBody] ComplaintDto complaint)
         {
-            string emailContent = $"Dear {complaint.LastName} {complaint.FirstName},\n\n" +
-                         "Your complaint has been submitted successfully!\n\n" +
-                         "Thank you for reaching out to us.\n\n" +
-                         "Best regards,\n" +
-                         "AirLegance Team";
-
-            await _emailService.SendEmail(complaint.Email, "Complaint Submission", emailContent);
+            await _emailService.SendEmail(complaint);
 
             return Ok();
         }
     }
-
- 
 }

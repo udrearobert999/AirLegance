@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using SendGrid.Helpers.Mail;
 using SendGrid;
+using Application.Dto;
 
 namespace Infrastructure.Services
 {
@@ -14,14 +15,25 @@ namespace Infrastructure.Services
             _sendGridApiKey = "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";
         }
 
-        public async Task SendEmail(string recipientEmail, string subject, string body)
+        public async Task SendEmail(ComplaintDto complaintDto)
         {
             var client = new SendGridClient(_sendGridApiKey);
-            var from = new EmailAddress("airlegance@gmail.com", "AirLegance");
-            var to = new EmailAddress(recipientEmail);
-            var email = MailHelper.CreateSingleEmail(from, to, subject, body, body);
+            var from = new EmailAddress(complaintDto.Email);
+            var to = new EmailAddress("airlegance@gmail.com", "AirLegance");
+            var sentMail = MailHelper.CreateSingleEmail(from, to, $"Complaint - {complaintDto.Email}",
+                complaintDto.Message, complaintDto.Message);
 
-            await client.SendEmailAsync(email);
+            await client.SendEmailAsync(sentMail);
+            var k = sentMail.HtmlContent;
+
+            string acknowledgmentBody = $"Dear {complaintDto.FirstName} {complaintDto.LastName},\n\n" +
+                                        "Your complaint has been submitted successfully!\n\n" +
+                                        "Thank you for reaching out to us.\n\n" +
+                                        "Best regards,\n" +
+                                        "AirLegance Team";
+            var ackEmail = MailHelper.CreateSingleEmail(to, from, "Complaint Acknowledgment", acknowledgmentBody, acknowledgmentBody);
+
+            await client.SendEmailAsync(ackEmail);
         }
     }
 }

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Dto;
 
 namespace Application.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmail(string recipientEmail, string subject, string body);
+        Task SendEmail(ComplaintDto complaintDto);
     }
 }

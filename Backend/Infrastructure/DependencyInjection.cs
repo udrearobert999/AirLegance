@@ -36,6 +36,7 @@ public static class DependencyInjection
         // Services registrations
         services.AddTransient<IUsersService, UsersService>();
         services.AddTransient<IAuthService, JwtAuthService>();
+        services.AddTransient<IEmailService, SendGridEmailService>();
 
         return services;
     }

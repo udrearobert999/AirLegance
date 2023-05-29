@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Card, CardContent, Tabs, Tab, Typography } from '@mui/material';
+import useAuth from 'Hooks/useAuth';
 
 const ProfilePage = ({ user }) => {
   const [value, setValue] = useState(0);
 
+  const { auth } = useAuth();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -20,7 +22,8 @@ const ProfilePage = ({ user }) => {
       }}
     >
       <Typography variant='h4' align='center' gutterBottom>
-        Welcome, back PLM PLM
+        Welcome, back {auth?.user?.firstName ?? '!'}{' '}
+        {auth?.user?.lastName ?? ''}
       </Typography>
       <Card
         sx={{ minWidth: 275, maxWidth: 800, width: '100%', marginTop: '5rem' }}

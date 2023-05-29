@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSnackbar from './useSnackBar';
+import useSnackbar from './useSnackbar';
 
 const API_ROUTE = import.meta.env.VITE_APP_API_ROUTE;
 export const axiosWithErrorRedirect = axios.create({

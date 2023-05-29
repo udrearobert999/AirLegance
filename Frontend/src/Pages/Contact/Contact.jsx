@@ -1,52 +1,57 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
-import Autocomplete from '@mui/material/Autocomplete';
-import Typography from '@mui/material/Typography';
+import useAuth from 'Hooks/useAuth';
+
 import Style from './Contact.module.css';
-import Card from '@mui/material/Card';
-import { CardContent } from '@mui/material';
-import { Grid } from '@mui/material';
-import { TextField } from '@mui/material';
-import { Button } from '@mui/material';
+
+import {
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
+
+import useAxiosWithErrorRedirect from 'Hooks/useAxiosWithErrorRedirect';
+import useSnackbar from 'Hooks/useSnackbar';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    message: '',
-  });
+  const { auth } = useAuth();
 
-  // TODO: use axios here
-  // TODO: dont think this works
+  const { openSuccessSnackbar } = useSnackbar();
+
+  const [loading, setLoading] = useState(false);
+
+  const firstName = useRef(null);
+  const lastName = useRef(null);
+  const email = useRef(null);
+  const message = useRef(null);
+
+  const axios = useAxiosWithErrorRedirect();
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
+    const complaintData = {
+      firstName: firstName.current?.value ?? auth.user?.firstName,
+      lastName: lastName.current?.value ?? auth.user?.lastName,
+      email: email.current?.value ?? auth.user?.email,
+      message: message.current?.value ?? 'No message',
+    };
+
+    setLoading(true);
+
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await axios.post('/complaints', complaintData);
 
-      if (response.ok) {
-        // Handle successful form submission
-        console.log('Form submitted successfully');
-      } else {
-        // Handle form submission failure
-        console.log('Form submission failed');
-      }
+      openSuccessSnackbar('Complaint submitted successfully');
     } catch (error) {
-      // Handle error
-      console.error('An error occurred during form submission', error);
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   return (
@@ -75,39 +80,43 @@ export default function Contact() {
           </Typography>
           <form onSubmit={handleFormSubmit}>
             <Grid container spacing={1}>
-              <Grid xs={12} sm={6} item>
-                <TextField
-                  name='firstName'
-                  label='First Name'
-                  placeholder='Enter First Name'
-                  fullWidth
-                  required
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid xs={12} sm={6} item>
-                <TextField
-                  name='lastName'
-                  label='Last Name'
-                  placeholder='Enter Last Name'
-                  fullWidth
-                  required
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid xs={12} item>
-                <TextField
-                  type='email'
-                  label='Email'
-                  placeholder='Enter email'
-                  fullWidth
-                  required
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </Grid>
+              {auth.user ? (
+                <></>
+              ) : (
+                <>
+                  <Grid xs={12} sm={6} item>
+                    <TextField
+                      name='firstName'
+                      label='First Name'
+                      placeholder='Enter First Name'
+                      fullWidth
+                      required
+                      inputRef={firstName}
+                    />
+                  </Grid>
+                  <Grid xs={12} sm={6} item>
+                    <TextField
+                      name='lastName'
+                      label='Last Name'
+                      placeholder='Enter Last Name'
+                      fullWidth
+                      required
+                      inputRef={lastName}
+                    />
+                  </Grid>
+                  <Grid xs={12} item>
+                    <TextField
+                      type='email'
+                      label='Email'
+                      placeholder='Enter email'
+                      fullWidth
+                      required
+                      inputRef={email}
+                    />
+                  </Grid>
+                </>
+              )}
+
               <Grid xs={12} item>
                 <TextField
                   label='message'
@@ -116,18 +125,19 @@ export default function Contact() {
                   placeholder='Type your message here'
                   fullWidth
                   required
-                  value={formData.message}
-                  onChange={handleInputChange}
+                  inputRef={message}
                 />
               </Grid>
               <Grid xs={12} item>
                 <Button
+                  disabled={loading}
+                  className={Style.submitButton}
                   type='submit'
                   variant='contained'
                   color='primary'
                   fullWidth
                 >
-                  Submit
+                  {loading ? <CircularProgress size={24} /> : 'Login'}
                 </Button>
               </Grid>
             </Grid>
