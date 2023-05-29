@@ -36,12 +36,12 @@ namespace UnitTests.Tests
             var firstnameField = _driver.FindElement(By.Name("firstName"));
             var lastnameField = _driver.FindElement(By.Name("lastName"));
             var emailFieldRegister = _driver.FindElement(By.Name("email"));
-            var passwordField = _driver.FindElement(By.Name("password"));
+            var passwordFieldRegister = _driver.FindElement(By.Name("password"));
  
             firstnameField.SendKeys("testFirst");
             lastnameField.SendKeys("testLast");
             emailFieldRegister.SendKeys(email);
-            passwordField.SendKeys("TestPassword123-");
+            passwordFieldRegister.SendKeys("TestPassword123-");
 
             var registerButton2 = _driver.FindElement(By.XPath("//button[@type='submit' and text()='Register']"));
             registerButton2.Click();
@@ -60,9 +60,10 @@ namespace UnitTests.Tests
                             d.FindElements(By.Name("email")).Count > 0);
 
             var emailFieldLogin = _driver.FindElement(By.Name("email"));
+            var passwordFieldLogin = _driver.FindElement(By.Name("password"));
 
             emailFieldLogin.SendKeys(email);
-            passwordField.SendKeys("TestPassword123-");
+            passwordFieldLogin.SendKeys("TestPassword123-");
 
             var loginButton2 = _driver.FindElement(By.XPath("//button[@type='submit' and text()='Login']"));
             loginButton2.Click();
